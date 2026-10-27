@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0637eff3a94d6ff439e6444e818e4ea4, type: 3}
+  m_Name: Pumpkin
+  m_EditorClassIdentifier: Assembly-CSharp::CropData
+  icon: {fileID: 2863295880221558683, guid: d407ab3c20fc7da4a80052c56657e70a, type: 3}
+  prefab: {fileID: 2773179751283487344, guid: b9afa792ffa0f5d40b9ccd5624961370, type: 3}
