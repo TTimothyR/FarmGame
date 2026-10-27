@@ -12,13 +12,13 @@ public class HUD : MonoBehaviour
     [SerializeField] private TextMeshProUGUI notificationTemplate;
     [SerializeField] private TextMeshProUGUI lifeCounter;
     [SerializeField] private TextMeshProUGUI scoreCounter;
+    [SerializeField] private TextMeshProUGUI seasonTimer;
     [SerializeField] private HotbarSlot slotTemplate;
     [SerializeField] private int hotbarSlots = 5;
     [SerializeField] private float notificationDuration = 5f;
     [SerializeField] private List<ItemData> slotItems;
 
     private List<HotbarSlot> slotList = new List<HotbarSlot>();
-
     
     // The HUD is a singleton
     public static HUD Instance { get; private set; }
@@ -115,5 +115,25 @@ public class HUD : MonoBehaviour
         }
 
         scoreCounter.text = $"Score: {GameManager.Instance.CurrentScore}";
+    }
+
+    public void UpdateSeasonTimer(float remainingSeconds)
+    {
+        if (seasonTimer == null)
+        {
+            return;
+        }
+
+        int minutes = (int)Mathf.Floor(remainingSeconds/60f);
+        int seconds = (int)(remainingSeconds - (minutes * 60f));
+
+        if (minutes == 0)
+        {
+            seasonTimer.text = $"Season changes in: {seconds}s";
+        }
+        else
+        {
+            seasonTimer.text = $"Season changes in: {minutes}m {seconds}s";
+        }
     }
 }

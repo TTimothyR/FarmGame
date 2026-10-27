@@ -3,13 +3,17 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class PlotBehaviour : MonoBehaviour
+public class PlotManager : MonoBehaviour
 {
     [SerializeField] private int plotRows = 4;
     [SerializeField] private int plotColumns = 4;
     [SerializeField] private GameObject plotTemplate;
     [SerializeField] private Vector3 startPosition = new Vector3(-24f, 0.6f, -20f);
     [SerializeField] private Vector3 spacing = new Vector3(10f, 0, 10f);
+    
+    [Header("Range checking")]
+    [SerializeField] private GameObject player;
+    [SerializeField] private float maximumInteractionDistance = 5f;
 
     private Camera mainCamera;
     private Plot currentlyHoveredPlot = null;
@@ -22,13 +26,29 @@ public class PlotBehaviour : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.GameStarted)
+        {
+            return;
+        }
         if (Mouse.current == null)
+        {
+            return;
+        }
+
+        if (player == null)
         {
             return;
         }
         
         HandleMouseHover();
         HandleClick();
+    }
+
+    private bool IsPlayerInRange(Transform targetPlot)
+    {
+        float distance = (player.transform.position - targetPlot.position).magnitude;
+
+        return distance <= maximumInteractionDistance;
     }
 
     private void HandleMouseHover()
@@ -48,6 +68,11 @@ public class PlotBehaviour : MonoBehaviour
             Plot hitPlot = hit.collider.GetComponentInParent<Plot>();
             if (hitPlot != null)
             {
+                if (!IsPlayerInRange(hit.transform))
+                {
+                    ClearHoveredPlot();
+                    return;
+                }
                 if (hitPlot != currentlyHoveredPlot)
                 {
                     ClearHoveredPlot();
@@ -65,6 +90,14 @@ public class PlotBehaviour : MonoBehaviour
     // TODO: Range check, player can only interact with a plot while in range.
     private void HandleClick()
     {
+        if (currentlyHoveredPlot == null)
+        {
+            return;
+        }
+        if (!IsPlayerInRange(currentlyHoveredPlot.transform))
+        {
+            return;
+        }
         if (Mouse.current.leftButton.wasPressedThisFrame && currentlyHoveredPlot != null)
         {
             currentlyHoveredPlot.Interact();

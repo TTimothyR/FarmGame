@@ -103,7 +103,6 @@ GameObject:
   - component: {fileID: 2665759833158707490}
   - component: {fileID: 5370109596513945504}
   - component: {fileID: 4183614258424389507}
-  - component: {fileID: 8064685587634111178}
   - component: {fileID: 2559116664109698644}
   m_Layer: 8
   m_Name: Player
@@ -206,18 +205,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementBehaviour
   _movementSpeed: 10
---- !u!114 &8064685587634111178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3210594327272904650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d15ce36faa0f0574f8605896338bdfb5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractBehaviour
 --- !u!114 &2559116664109698644
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using System.Collections.Generic;
+
 
 public class Plot : MonoBehaviour
 {
@@ -23,6 +23,7 @@ public class Plot : MonoBehaviour
     private bool isWatered = false;
     private bool isHovering = false;
     private GameObject currentCrop = null;
+    private ItemData currentCropData = null;
     private float currentCropElapsedTime = 0f;
     private float elapsedWateredTime = 0f;
     private float maximumWateredTime = 0f;
@@ -40,17 +41,25 @@ public class Plot : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.GameStarted)
+        {
+            return;
+        }
         if (isWatered)
         {
             DryOutOverTime();
         }
-        // Grow the crop while in its growing stage
-        if (IsOccupied && Math.Floor(currentCropElapsedTime/growTime) <= 0 && currentCrop != null && isWatered)
+        
+        // Grow the crop while in its growing stage and while it's in the correct season.
+        if (SeasonManager.Instance.GetSeasonalCrop() == currentCropData)
         {
-            GrowCrop();
+            if (IsOccupied && Math.Floor(currentCropElapsedTime/growTime) <= 0 && currentCrop != null && isWatered)
+            {
+                GrowCrop();
+            }
         }
         // Rot the crop when it left the growing stage
-        else if (IsOccupied && Math.Floor(currentCropElapsedTime / growTime) > 0 && currentCropRenderer != null)
+        if (IsOccupied && Math.Floor(currentCropElapsedTime / growTime) > 0 && currentCropRenderer != null)
         {
             RotCrop();
         }
@@ -61,9 +70,19 @@ public class Plot : MonoBehaviour
         }
     }
 
+    private float EaseInSine(float progress)
+    {
+        return 1 - Mathf.Cos((progress * Mathf.PI) / 2f);
+    }
+
     private void DryOutOverTime()
     {
-        elapsedWateredTime += Time.deltaTime
+        elapsedWateredTime += Time.deltaTime;
+        float progress = Mathf.Clamp01(elapsedWateredTime / maximumWateredTime);
+        float easedProgress = EaseInSine(progress);
+
+        Color currentColor = Color.Lerp(wateredColor, baseColor, easedProgress);
+        plotRenderer.material.color = currentColor;
         if (elapsedWateredTime >= maximumWateredTime)
         {
             ResetWatering();
@@ -98,6 +117,7 @@ public class Plot : MonoBehaviour
         Destroy(currentCrop);
         currentCropRenderer = null;
         currentCropElapsedTime = 0f;
+        currentCropData = null;
         ResetWatering();
     }
 
@@ -139,6 +159,7 @@ public class Plot : MonoBehaviour
         {
             GameObject cropClone = Instantiate(Inventory.Instance.HoldingItem.prefab, transform);
             currentCrop = cropClone;
+            currentCropData = Inventory.Instance.HoldingItem;
             currentCropRenderer = cropClone.GetComponent<Renderer>();
         }
         else if (IsOccupied && currentCropElapsedTime >= growTime && currentCropElapsedTime < (growTime + rotTime))

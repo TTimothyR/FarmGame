@@ -8,21 +8,15 @@ public class PlayerCharacter : BasicCharacter
     [SerializeField] private InputActionReference _xMovement;
     [SerializeField] private InputActionReference _yMovement;
     
-    private InteractBehaviour _interactBehaviour;
-
-    private InputAction _interactAction;
 
     protected override void Awake()
     {
         base.Awake();
-        _interactBehaviour = GetComponent<InteractBehaviour>();
 
         if (_inputAsset == null)
         {
             return;
         }
-
-        _interactAction = _inputAsset.FindActionMap("Gameplay").FindAction("Interact");
     }
 
     private void OnEnable()
@@ -37,8 +31,10 @@ public class PlayerCharacter : BasicCharacter
 
     private void Update()
     {
-        HandleMovementInput();
-        HandleInteractInput();
+        if (GameManager.Instance.GameStarted)
+        {
+            HandleMovementInput();
+        }
     }
 
     // Handle the input for both movement directions
@@ -54,18 +50,5 @@ public class PlayerCharacter : BasicCharacter
 
         Vector3 movement = (horizontalMovementInput * Vector3.forward) + (verticalMovementInput * Vector3.left);
         _movementBehaviour.DesiredMovementDirection = movement;
-    }
-
-    private void HandleInteractInput()
-    {
-        if (_interactBehaviour == null || _interactAction == null)
-        {
-            return;
-        }
-
-        if (_interactAction.WasPressedThisFrame())
-        {
-            _interactBehaviour.Interact();
-        }
     }
 }

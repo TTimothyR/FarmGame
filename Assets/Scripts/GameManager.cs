@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     
     public int CurrentLives { get; private set; }
     public int CurrentScore { get; private set; }
+    public bool GameStarted { get; private set; }
 
     private void Awake()
     {
@@ -41,7 +43,9 @@ public class GameManager : MonoBehaviour
         HUD.Instance.UpdateLives();
         if (CurrentLives <= 0)
         {
-            GameOver();
+            ScreenManager.Instance.ShowGameOverScreen();
+            GameStarted = false;
+            // GameOver();
         }
     }
 
@@ -51,7 +55,12 @@ public class GameManager : MonoBehaviour
         HUD.Instance.UpdateScore();
     }
 
-    private void GameOver()
+    public void StartGame()
+    {
+        GameStarted = true;
+    }
+
+    public void GameOver()
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentSceneName);
