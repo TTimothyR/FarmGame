@@ -76,6 +76,11 @@ public class SeasonManager : MonoBehaviour
 
     private void ChangeSeason()
     {
+        if (currentSeason == Seasons.Winter)
+        {
+            GameManager.Instance.WinGame();
+            return;
+        }
         currentSeason = (Seasons)(((int)currentSeason + 1) % (int)Seasons.Count);
         SetCurrentSeasonColor();
     }

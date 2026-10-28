@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Corn
   m_EditorClassIdentifier: Assembly-CSharp::CropData
   icon: {fileID: 7961352764529298422, guid: 30e9afa269073874598e9afdce0f675e, type: 3}
+  requiredSeasonIcon: {fileID: 8987275716240953735, guid: bcc6b4b6f3f38cd478a73630dcb8d9e7, type: 3}
   prefab: {fileID: 6263893399112578561, guid: 65df821f7e926d549a1d5c87e8a15159, type: 3}

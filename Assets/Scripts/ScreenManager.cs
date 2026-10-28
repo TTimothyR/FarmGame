@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -9,8 +10,14 @@ public class ScreenManager : MonoBehaviour
     
     [SerializeField] private Canvas startScreenCanvas;
     [SerializeField] private Button playButton;
+    
     [SerializeField] private Canvas gameOverScreenCanvas;
     [SerializeField] private Button restartButton;
+
+    [SerializeField] private Canvas winnerScreenCanvas;
+    [SerializeField] private Button winnerRestartButton;
+    [SerializeField] private TextMeshProUGUI totalScore;
+    
     [SerializeField] private Canvas hudCanvas;
     [SerializeField] private Volume blurVolume;
 
@@ -32,6 +39,11 @@ public class ScreenManager : MonoBehaviour
         if (restartButton != null)
         {
             restartButton.onClick.AddListener(BackToStart);
+        }
+        
+        if (winnerRestartButton != null)
+        {
+            winnerRestartButton.onClick.AddListener(BackToStart);
         }
     }
 
@@ -56,9 +68,32 @@ public class ScreenManager : MonoBehaviour
 
     public void ShowGameOverScreen()
     {
-        if (gameOverScreenCanvas != null)
+        if (winnerScreenCanvas != null)
         {
             gameOverScreenCanvas.enabled = true;
+        }
+
+        if (hudCanvas != null)
+        {
+            hudCanvas.enabled = false;
+        }
+
+        if (blurVolume != null)
+        {
+            blurVolume.enabled = true;
+        }
+    }
+
+    public void ShowWinnerScreen()
+    {
+        if (winnerScreenCanvas != null)
+        {
+            winnerScreenCanvas.enabled = true;
+        }
+
+        if (totalScore != null)
+        {
+            totalScore.text = $"Your score: {GameManager.Instance.CurrentScore}";
         }
 
         if (hudCanvas != null)

@@ -4,5 +4,6 @@ using UnityEngine;
 public class ItemData : ScriptableObject
 {
     public Sprite icon;
+    public Sprite requiredSeasonIcon;
     public GameObject prefab;
 }

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Pumpkin
   m_EditorClassIdentifier: Assembly-CSharp::CropData
   icon: {fileID: 2863295880221558683, guid: d407ab3c20fc7da4a80052c56657e70a, type: 3}
+  requiredSeasonIcon: {fileID: 1265529135613233479, guid: 1c5761bf23fce764e9d692c59f435d72, type: 3}
   prefab: {fileID: 2773179751283487344, guid: b9afa792ffa0f5d40b9ccd5624961370, type: 3}

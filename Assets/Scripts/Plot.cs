@@ -1,10 +1,20 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class Plot : MonoBehaviour
 {
     [SerializeField] private ItemData wateringCan;
+    [SerializeField] private Sprite waterDropIcon;
+    
+    [Header("Needs Icon Animation")]
+    [SerializeField] private Canvas plotNeeds;
+    [SerializeField] private float smallScale = 0.01f;
+    [SerializeField] private float bigScale = 0.012f;
+    [SerializeField] private float pulseSpeed = 6f;
+    
     [Header("Colors")] 
     [SerializeField] private Color baseColor = new Color(144/255f, 83/255f, 45/255f);
     [SerializeField] private Color wateredColor;
@@ -22,11 +32,17 @@ public class Plot : MonoBehaviour
     public bool IsOccupied => currentCrop != null;
     private bool isWatered = false;
     private bool isHovering = false;
+    
     private GameObject currentCrop = null;
     private ItemData currentCropData = null;
     private float currentCropElapsedTime = 0f;
+
+    private Image plotNeedsImg = null;
+    
     private float elapsedWateredTime = 0f;
     private float maximumWateredTime = 0f;
+    
+    
     private Renderer currentCropRenderer;
     private Renderer plotRenderer;
 
@@ -35,6 +51,11 @@ public class Plot : MonoBehaviour
         if (plotRenderer == null)
         {
             plotRenderer = GetComponentInChildren<Renderer>();
+        }
+
+        if (plotNeeds != null)
+        {
+            plotNeedsImg = GetComponentInChildren<Image>();
         }
         ResetColor();
     }
@@ -49,9 +70,13 @@ public class Plot : MonoBehaviour
         {
             DryOutOverTime();
         }
+
+        bool isSeasonRight = currentCropData != null && SeasonManager.Instance.GetSeasonalCrop() == currentCropData;
+        
+        HandleCropNeeds(isSeasonRight);
         
         // Grow the crop while in its growing stage and while it's in the correct season.
-        if (SeasonManager.Instance.GetSeasonalCrop() == currentCropData)
+        if (isSeasonRight)
         {
             if (IsOccupied && Math.Floor(currentCropElapsedTime/growTime) <= 0 && currentCrop != null && isWatered)
             {
@@ -67,6 +92,43 @@ public class Plot : MonoBehaviour
         if (IsOccupied && currentCropElapsedTime > (growTime + rotTime) && currentCrop != null)
         {
             DestroyCrop();
+        }
+    }
+
+    private void HandleCropNeeds(bool isSeasonRight)
+    {
+        if (plotNeeds == null || plotNeedsImg == null) return;
+
+        if (!IsOccupied || currentCropData == null)
+        {
+            plotNeeds.enabled = false;
+            return;
+        }
+
+        Sprite iconToShow = null;
+
+        if (!isSeasonRight)
+        {
+            iconToShow = currentCropData.requiredSeasonIcon;
+        }
+        else if (!isWatered && Math.Floor(currentCropElapsedTime / growTime) <= 0)
+        {
+            iconToShow = waterDropIcon;
+        }
+
+        if (iconToShow != null)
+        {
+            plotNeeds.enabled = true;
+            plotNeedsImg.sprite = iconToShow;
+
+            // Breathing pulse animation
+            float wave = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f;
+            float scale = Mathf.Lerp(smallScale, bigScale, wave);
+            plotNeeds.transform.localScale = Vector3.one * scale;
+        }
+        else
+        {
+            plotNeeds.enabled = false;
         }
     }
 
@@ -161,6 +223,11 @@ public class Plot : MonoBehaviour
             currentCrop = cropClone;
             currentCropData = Inventory.Instance.HoldingItem;
             currentCropRenderer = cropClone.GetComponent<Renderer>();
+
+            if (currentCropData != SeasonManager.Instance.GetSeasonalCrop())
+            {
+                HUD.Instance.ShowNotification("This crop will not grow in this season.");
+            }
         }
         else if (IsOccupied && currentCropElapsedTime >= growTime && currentCropElapsedTime < (growTime + rotTime))
         {

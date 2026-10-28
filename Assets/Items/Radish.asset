@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Radish
   m_EditorClassIdentifier: Assembly-CSharp::CropData
   icon: {fileID: 6315970577937633309, guid: 038334e6aab53ed4588ea62deea95aa9, type: 3}
+  requiredSeasonIcon: {fileID: 279919546456459192, guid: 6cd3ef904a105884aacca32de54dd0fb, type: 3}
   prefab: {fileID: 5992788275412732974, guid: 655839e33ebc35645b125933c8da7289, type: 3}

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Cabbage
   m_EditorClassIdentifier: Assembly-CSharp::CropData
   icon: {fileID: -157052563427347341, guid: 5f94c27d9efc3a54fb8f1d4512d62fea, type: 3}
+  requiredSeasonIcon: {fileID: 4427026210493128679, guid: c9f5b7bbd3c6a6949a8daf84bff504d9, type: 3}
   prefab: {fileID: 1200179603671893951, guid: 8928aaa01a9aa9142b506801662e9950, type: 3}

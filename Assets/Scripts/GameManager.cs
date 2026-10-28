@@ -60,6 +60,12 @@ public class GameManager : MonoBehaviour
         GameStarted = true;
     }
 
+    public void WinGame()
+    {
+        ScreenManager.Instance.ShowWinnerScreen();
+        GameStarted = false;
+    }
+
     public void GameOver()
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
