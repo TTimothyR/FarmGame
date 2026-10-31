@@ -732,6 +732,7 @@ MonoBehaviour:
     dryoutTime: 20
     color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 0}
     seasonalCrop: {fileID: 11400000, guid: 571b64e87cbfced48a9fa5f4f3c8d4cc, type: 2}
+  seasonDuration: 180
   ground: {fileID: 1051480481}
 --- !u!1 &743514246
 GameObject:
@@ -816,7 +817,7 @@ MonoBehaviour:
   startPosition: {x: -24, y: 0.6, z: -20}
   spacing: {x: 10, y: 0, z: 10}
   player: {fileID: 464840782}
-  maximumInteractionDistance: 8
+  maximumInteractionDistance: 10
 --- !u!1001 &849929330
 PrefabInstance:
   m_ObjectHideFlags: 0

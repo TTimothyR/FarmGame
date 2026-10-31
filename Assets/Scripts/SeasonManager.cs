@@ -24,13 +24,13 @@ public class SeasonManager : MonoBehaviour
     }
 
     [SerializeField] private List<Season> seasonData = new List<Season>();
+    [SerializeField] private float seasonDuration = 60 * 1.5f;
     [SerializeField] private GameObject ground;
 
     
     public static SeasonManager Instance { get; private set; }
 
     private Seasons currentSeason = Seasons.Spring;
-    private const float seasonDuration = 60 * 1.5f; // 60 seconds x 4 minutes
     private float elapsedInThisSeason = 0f;
 
     private Renderer groundRenderer;

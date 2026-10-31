@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class Plot : MonoBehaviour
 {
     [SerializeField] private ItemData wateringCan;
+    [SerializeField] private ItemData shovel;
     [SerializeField] private Sprite waterDropIcon;
     
     [Header("Needs Icon Animation")]
@@ -217,6 +218,10 @@ public class Plot : MonoBehaviour
             maximumWateredTime = SeasonManager.Instance.GetDryOutTime();
             SetColor();
         } 
+        else if (Inventory.Instance.HoldingItem == shovel && IsOccupied)
+        {
+            RemoveCurrentCrop();
+        }
         else if (Inventory.Instance.HoldingItem != wateringCan && Inventory.Instance.HoldingItem != null && !IsOccupied)
         {
             GameObject cropClone = Instantiate(Inventory.Instance.HoldingItem.prefab, transform);

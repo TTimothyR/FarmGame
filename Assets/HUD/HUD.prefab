@@ -335,14 +335,15 @@ MonoBehaviour:
   scoreCounter: {fileID: 6759698327343250297}
   seasonTimer: {fileID: 4382821036733749785}
   slotTemplate: {fileID: 8412441573640982523, guid: 864b43d0d5900864d8134c2d16654c9e, type: 3}
-  hotbarSlots: 5
-  notificationDuration: 5
+  hotbarSlots: 6
+  notificationDuration: 4
   slotItems:
   - {fileID: 11400000, guid: 811a75551c466824ea07fd1d86e14d45, type: 2}
   - {fileID: 11400000, guid: a821e03f654aca24f87a175bb5b38117, type: 2}
   - {fileID: 11400000, guid: 537c2d4a28abbd343b20956191845f3e, type: 2}
   - {fileID: 11400000, guid: 571b64e87cbfced48a9fa5f4f3c8d4cc, type: 2}
   - {fileID: 11400000, guid: d4b1c79c6b9c8cc4d94c1884e949e4ac, type: 2}
+  - {fileID: 11400000, guid: 17c764dca49dcfc4f9e058a4dd2421da, type: 2}
 --- !u!1 &5463676791095961392
 GameObject:
   m_ObjectHideFlags: 0

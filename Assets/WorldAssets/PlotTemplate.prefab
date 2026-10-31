@@ -359,6 +359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Plot
   wateringCan: {fileID: 11400000, guid: d4b1c79c6b9c8cc4d94c1884e949e4ac, type: 2}
+  shovel: {fileID: 11400000, guid: 17c764dca49dcfc4f9e058a4dd2421da, type: 2}
   waterDropIcon: {fileID: 6049605792901559095, guid: 204111dc0b57a2841851eafb9c53f033, type: 3}
   plotNeeds: {fileID: 1035802013654982089}
   smallScale: 0.015
