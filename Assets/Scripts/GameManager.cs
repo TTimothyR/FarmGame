@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     
     public int CurrentLives { get; private set; }
     public int CurrentScore { get; private set; }
+    public int CurrentHighScore { get; private set; }
     public bool GameStarted { get; private set; }
 
     private void Awake()
@@ -53,11 +54,24 @@ public class GameManager : MonoBehaviour
     {
         ++CurrentScore;
         HUD.Instance.UpdateScore();
+        
+        if (CurrentScore > CurrentHighScore)
+        {
+            CurrentHighScore = CurrentScore;
+            HUD.Instance.UpdateHighScore();
+        }
     }
 
     public void StartGame()
     {
         GameStarted = true;
+
+        CurrentHighScore = LeaderboardManager.GetPlayerHighScore(LeaderboardManager.CurrentPlayerName);
+
+        if (HUD.Instance != null)
+        {
+            HUD.Instance.UpdateHighScore();
+        }
     }
 
     public void WinGame()
@@ -68,6 +82,7 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        LeaderboardManager.SaveScore(LeaderboardManager.CurrentPlayerName, CurrentScore);
         string currentSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentSceneName);
     }

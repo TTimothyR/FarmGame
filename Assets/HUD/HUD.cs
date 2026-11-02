@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class HUD : MonoBehaviour
 {
@@ -12,16 +11,23 @@ public class HUD : MonoBehaviour
     [SerializeField] private TextMeshProUGUI notificationTemplate;
     [SerializeField] private TextMeshProUGUI lifeCounter;
     [SerializeField] private TextMeshProUGUI scoreCounter;
-    [SerializeField] private TextMeshProUGUI seasonTimer;
+    [SerializeField] private TextMeshProUGUI highScoreCounter;
+    [SerializeField] private Image currentSeasonIcon;
     [SerializeField] private HotbarSlot slotTemplate;
     [SerializeField] private int hotbarSlots = 5;
     [SerializeField] private float notificationDuration = 5f;
     [SerializeField] private List<ItemData> slotItems;
 
     private List<HotbarSlot> slotList = new List<HotbarSlot>();
+    private TextMeshProUGUI seasonTimer;
     
     // The HUD is a singleton
     public static HUD Instance { get; private set; }
+
+    private static readonly Key[] HotbarKeys = new Key[]
+    {
+        Key.Digit1, Key.Digit2, Key.Digit3, Key.Digit4, Key.Digit5, Key.Digit6, Key.Digit7, Key.Digit8, Key.Digit9
+    };
 
     private void Awake()
     {
@@ -33,12 +39,52 @@ public class HUD : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if (currentSeasonIcon != null)
+        {
+            seasonTimer = currentSeasonIcon.GetComponentInChildren<TextMeshProUGUI>();
+        }
     }
 
     // Load the UI hotbar slots at the start of the game, based on how many slots are needed.
     private void Start()
     {
         CreateHotBarSlots();
+    }
+
+    private void Update()
+    {
+        HandleHotbarKeyInput();
+    }
+
+    private void HandleHotbarKeyInput()
+    {
+        if (Keyboard.current == null)
+        {
+            return;
+        }
+
+        int slotsToCheck = Mathf.Min(slotList.Count, HotbarKeys.Length);
+
+        for (int index = 0; index < slotsToCheck; index++)
+        {
+            if (Keyboard.current[HotbarKeys[index]].wasPressedThisFrame)
+            {
+                SelectSlotByIndex(index);
+                break;
+            }
+        }
+    }
+
+    private void SelectSlotByIndex(int index)
+    {
+        if (index < 0 || index >= slotList.Count)
+        {
+            return;
+        }
+
+        ItemData itemInSlot = (index < slotItems.Count) ? slotItems[index] : null;
+        OnSlotPressed(itemInSlot, slotList[index]);
     }
 
     private void CreateHotBarSlots()
@@ -117,6 +163,24 @@ public class HUD : MonoBehaviour
         scoreCounter.text = $"Score: {GameManager.Instance.CurrentScore}";
     }
 
+    public void UpdateHighScore()
+    {
+        if (highScoreCounter == null)
+        {
+            return;
+        }
+
+        highScoreCounter.text = $"HighScore: {GameManager.Instance.CurrentHighScore}";
+    }
+
+    public void UpdateSeasonIcon(Sprite targetIcon)
+    {
+        if (currentSeasonIcon != null)
+        {
+            currentSeasonIcon.sprite = targetIcon;
+        }
+    }
+
     public void UpdateSeasonTimer(float remainingSeconds)
     {
         if (seasonTimer == null)
@@ -127,13 +191,18 @@ public class HUD : MonoBehaviour
         int minutes = (int)Mathf.Floor(remainingSeconds/60f);
         int seconds = (int)(remainingSeconds - (minutes * 60f));
 
-        if (minutes == 0)
-        {
-            seasonTimer.text = $"Season changes in: {seconds}s";
-        }
-        else
-        {
-            seasonTimer.text = $"Season changes in: {minutes}m {seconds}s";
-        }
+        string minutesStr = "0" + minutes.ToString();
+        string secondsStr = seconds < 10 ? "0" + seconds.ToString() : seconds.ToString();
+
+        seasonTimer.text = $"{minutesStr}:{secondsStr}";
+
+        // if (minutes == 0)
+        // {
+        //     seasonTimer.text = $"{seconds}";
+        // }
+        // else
+        // {
+        //     seasonTimer.text = $"{minutes}:{seconds}s";
+        // }
     }
 }

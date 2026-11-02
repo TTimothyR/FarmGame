@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class HotbarSlot : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
+    [SerializeField] private Image seasonImage;
     [SerializeField] private TextMeshProUGUI keybindText;
     [SerializeField] private Button button;
     
@@ -26,11 +27,23 @@ public class HotbarSlot : MonoBehaviour
 
         if (item != null)
         {
+            iconImage.enabled = true;
             iconImage.sprite = item.icon;
+            
+            if (item.requiredSeasonIcon != null)
+            {
+                seasonImage.enabled = true;
+                seasonImage.sprite = item.requiredSeasonIcon;
+            }
+            else
+            {
+                seasonImage.enabled = false;
+            }
         }
         else
         {
             iconImage.enabled = false;
+            seasonImage.enabled = false;
         }
     }
 }

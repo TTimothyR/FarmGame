@@ -732,7 +732,7 @@ MonoBehaviour:
     dryoutTime: 20
     color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 0}
     seasonalCrop: {fileID: 11400000, guid: 571b64e87cbfced48a9fa5f4f3c8d4cc, type: 2}
-  seasonDuration: 180
+  seasonDuration: 50
   ground: {fileID: 1051480481}
 --- !u!1 &743514246
 GameObject:
@@ -1078,6 +1078,17 @@ Canvas:
   m_CorrespondingSourceObject: {fileID: 7571382693698473404, guid: 1d91abaf881d71a4496dabb78c2653ce, type: 3}
   m_PrefabInstance: {fileID: 7508191278084064537}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1268514374 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 213156554049286086, guid: c284075622fc77d44948cf2c625d1065, type: 3}
+  m_PrefabInstance: {fileID: 2144278138968094245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
 --- !u!1001 &1290892097
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1189,6 +1200,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2258854737653601074, guid: 20cb6435849a553489dbcc302657e03b, type: 3}
   m_PrefabInstance: {fileID: 884157635857882757}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1569910597 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4813616622736139477, guid: c284075622fc77d44948cf2c625d1065, type: 3}
+  m_PrefabInstance: {fileID: 2144278138968094245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TMP_InputField
 --- !u!4 &1632437944 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9142318754620899675, guid: d8ca7472d969f7145b14feabf5744827, type: 3}
@@ -1230,6 +1252,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScreenManager
   startScreenCanvas: {fileID: 277527176}
   playButton: {fileID: 426723269}
+  leaderboard: {fileID: 1268514374}
+  leaderboardEntryTemplate: {fileID: 4971552617196680133, guid: d55f435faee869b4a87cd3e2c8e31760, type: 3}
+  playerNameInput: {fileID: 1569910597}
+  playErrorDisplayTime: 3
   gameOverScreenCanvas: {fileID: 383340320}
   restartButton: {fileID: 187973209}
   winnerScreenCanvas: {fileID: 629136134}
@@ -1770,7 +1796,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4118019680653638020, guid: 1d91abaf881d71a4496dabb78c2653ce, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d91abaf881d71a4496dabb78c2653ce, type: 3}

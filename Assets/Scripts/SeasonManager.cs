@@ -83,6 +83,7 @@ public class SeasonManager : MonoBehaviour
         }
         currentSeason = (Seasons)(((int)currentSeason + 1) % (int)Seasons.Count);
         SetCurrentSeasonColor();
+        HUD.Instance.UpdateSeasonIcon(GetCurrentSeasonIcon());
     }
 
     private void SetCurrentSeasonColor()
@@ -96,6 +97,11 @@ public class SeasonManager : MonoBehaviour
     public Seasons GetCurrentSeason()
     {
         return currentSeason;
+    }
+
+    private Sprite GetCurrentSeasonIcon()
+    {
+        return seasonData[(int)currentSeason].seasonalCrop.requiredSeasonIcon;
     }
     
     public float GetDryOutTime()

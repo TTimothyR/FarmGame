@@ -3,24 +3,38 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class ScreenManager : MonoBehaviour
 {
     public static ScreenManager Instance { get; private set; }
     
+    [Header("Start Screen")]
     [SerializeField] private Canvas startScreenCanvas;
     [SerializeField] private Button playButton;
+    [SerializeField] private VerticalLayoutGroup leaderboard;
+    [SerializeField] private TextMeshProUGUI leaderboardEntryTemplate;
+    [SerializeField] private TMP_InputField playerNameInput;
+    [SerializeField] private float playErrorDisplayTime;
     
+    [Header("Game Over Screen")]
     [SerializeField] private Canvas gameOverScreenCanvas;
     [SerializeField] private Button restartButton;
 
+    [Header("Winner Screen")]
     [SerializeField] private Canvas winnerScreenCanvas;
     [SerializeField] private Button winnerRestartButton;
     [SerializeField] private TextMeshProUGUI totalScore;
     
+    [Header("Misc")]
     [SerializeField] private Canvas hudCanvas;
     [SerializeField] private Volume blurVolume;
 
+    private TextMeshProUGUI playText;
+
+    private float elapsedDisplayTime = 0f;
+    private bool displayingError = false;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -34,6 +48,7 @@ public class ScreenManager : MonoBehaviour
         if (playButton != null)
         {
             playButton.onClick.AddListener(StartGame);
+            playText = playButton.GetComponentInChildren<TextMeshProUGUI>();
         }
 
         if (restartButton != null)
@@ -45,16 +60,59 @@ public class ScreenManager : MonoBehaviour
         {
             winnerRestartButton.onClick.AddListener(BackToStart);
         }
+        
+        DisplayLeaderboard();
+    }
+
+    private void Update()
+    {
+        if (displayingError)
+        {
+            elapsedDisplayTime += Time.deltaTime;
+
+            if (elapsedDisplayTime >= playErrorDisplayTime)
+            {
+                displayingError = false;
+                elapsedDisplayTime = 0f;
+
+                if (playText != null)
+                {
+                    playText.text = "Play";
+                }
+            }
+        }
+    }
+
+    private void DisplayLeaderboard()
+    {
+        List<Entry> topScores = LeaderboardManager.GetTopScores(10);
+
+        for (int index = 0; index < topScores.Count; index++)
+        {
+            TextMeshProUGUI clone = Instantiate(leaderboardEntryTemplate, leaderboard.transform);
+            clone.text = $"{index + 1}. {topScores[index].playerName} - {topScores[index].score}";
+        }
     }
 
     private void StartGame()
     {
+        if (playerNameInput.text == "")
+        {
+            if (playText != null)
+            {
+                playText.text = "Enter a name!";
+                displayingError = true;
+                elapsedDisplayTime = 0f;
+            }
+            return;
+        }
+
+        LeaderboardManager.CurrentPlayerName = playerNameInput.text.Trim();
         GameManager.Instance.StartGame();
         if (startScreenCanvas != null)
         {
             startScreenCanvas.enabled = false;
         }
-
         if (hudCanvas != null)
         {
             hudCanvas.enabled = true;
@@ -68,7 +126,7 @@ public class ScreenManager : MonoBehaviour
 
     public void ShowGameOverScreen()
     {
-        if (winnerScreenCanvas != null)
+        if (gameOverScreenCanvas != null)
         {
             gameOverScreenCanvas.enabled = true;
         }
