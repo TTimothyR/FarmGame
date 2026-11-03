@@ -391,7 +391,7 @@ GameObject:
   - component: {fileID: 8439705855149818880}
   - component: {fileID: 2702585705860462712}
   m_Layer: 5
-  m_Name: Credits
+  m_Name: Reason
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

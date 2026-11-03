@@ -709,29 +709,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SeasonManager
   seasonData:
   - type: 0
-    rainFrequency: 0
-    rainDuration: 0
     dryoutTime: 10
     color: {r: 0.32156864, g: 0.7176471, b: 0.29411766, a: 0}
     seasonalCrop: {fileID: 11400000, guid: 811a75551c466824ea07fd1d86e14d45, type: 2}
+    requiredCropsHarvested:
+      minimum: 6
+      maximum: 8
   - type: 1
-    rainFrequency: 60
-    rainDuration: 15
     dryoutTime: 5
     color: {r: 0.836478, g: 0.7272146, b: 0.27619547, a: 0}
     seasonalCrop: {fileID: 11400000, guid: a821e03f654aca24f87a175bb5b38117, type: 2}
+    requiredCropsHarvested:
+      minimum: 10
+      maximum: 12
   - type: 2
-    rainFrequency: 45
-    rainDuration: 20
     dryoutTime: 12
     color: {r: 0.8301887, g: 0.44961765, b: 0.15402867, a: 0}
     seasonalCrop: {fileID: 11400000, guid: 537c2d4a28abbd343b20956191845f3e, type: 2}
+    requiredCropsHarvested:
+      minimum: 14
+      maximum: 16
   - type: 3
-    rainFrequency: 30
-    rainDuration: 30
-    dryoutTime: 20
+    dryoutTime: 15
     color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 0}
     seasonalCrop: {fileID: 11400000, guid: 571b64e87cbfced48a9fa5f4f3c8d4cc, type: 2}
+    requiredCropsHarvested:
+      minimum: 18
+      maximum: 20
   seasonDuration: 50
   ground: {fileID: 1051480481}
 --- !u!1 &743514246
@@ -1221,6 +1225,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1049536955120539310, guid: 6bec6115e958af94f9b641e7f7644be7, type: 3}
   m_PrefabInstance: {fileID: 7942815882644059035}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1838946622 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2702585705860462712, guid: b95886b4e77a12145af0856ba7ac94df, type: 3}
+  m_PrefabInstance: {fileID: 115535238}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &2073293064
 GameObject:
   m_ObjectHideFlags: 0
@@ -1258,6 +1273,7 @@ MonoBehaviour:
   playErrorDisplayTime: 3
   gameOverScreenCanvas: {fileID: 383340320}
   restartButton: {fileID: 187973209}
+  reasonLabel: {fileID: 1838946622}
   winnerScreenCanvas: {fileID: 629136134}
   winnerRestartButton: {fileID: 629136133}
   totalScore: {fileID: 629136132}

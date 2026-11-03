@@ -1,5 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Mathematics;
+using Random = UnityEngine.Random;
+
 public class SeasonManager : MonoBehaviour
 {
     public enum Seasons
@@ -12,15 +15,20 @@ public class SeasonManager : MonoBehaviour
     };
 
     [System.Serializable]
+    private struct Range
+    {
+        public int minimum;
+        public int maximum;
+    }
+
+    [System.Serializable]
     private struct Season
     {
         public Seasons type;
-        // public float duration;
-        public float rainFrequency; // After how many seconds does it rain?
-        public float rainDuration; // How long does it rain for?
         public float dryoutTime;
         public Color color;
         public ItemData seasonalCrop;
+        public Range requiredCropsHarvested;
     }
 
     [SerializeField] private List<Season> seasonData = new List<Season>();
@@ -81,7 +89,17 @@ public class SeasonManager : MonoBehaviour
             GameManager.Instance.WinGame();
             return;
         }
+
         currentSeason = (Seasons)(((int)currentSeason + 1) % (int)Seasons.Count);
+        if (GameManager.Instance.QuotaProgress < GameManager.Instance.CurrentQuota)
+        {
+            GameManager.Instance.EndGame("You didn't meet the seasonal quota.");
+            return;
+        }
+        else
+        {
+            GameManager.Instance.RefreshQuota();
+        }
         SetCurrentSeasonColor();
         HUD.Instance.UpdateSeasonIcon(GetCurrentSeasonIcon());
     }
@@ -112,5 +130,12 @@ public class SeasonManager : MonoBehaviour
     public ItemData GetSeasonalCrop()
     {
         return seasonData[(int)currentSeason].seasonalCrop;
+    }
+
+    public int GetSeasonalQuota()
+    {
+        Range seasonalRange = seasonData[(int)currentSeason].requiredCropsHarvested;
+
+        return Random.Range(seasonalRange.minimum, seasonalRange.maximum + 1);
     }
 }

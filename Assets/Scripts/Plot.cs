@@ -9,6 +9,7 @@ public class Plot : MonoBehaviour
     [SerializeField] private ItemData wateringCan;
     [SerializeField] private ItemData shovel;
     [SerializeField] private Sprite waterDropIcon;
+    [SerializeField] private Sprite exclamationMarkIcon;
     
     [Header("Needs Icon Animation")]
     [SerializeField] private Canvas plotNeeds;
@@ -22,15 +23,23 @@ public class Plot : MonoBehaviour
 
     [Header("Crop growing")]
     [SerializeField] private float growTime = 10f;
+    [SerializeField] private float timeUntilRotStart = 3f;
     [SerializeField] private float startScale = 1f;
     [SerializeField] private float endScale = 3f;
     
     [Header("Crop rotting")]
     [SerializeField] private float rotTime = 20f;
-    [SerializeField] private Color startColor = Color.white;
-    [SerializeField] private Color endColor = Color.saddleBrown;
+    [SerializeField] private float endRotation = 45f;
+    [SerializeField] private float endRotScale = 3f;
+
+    [Header("Grown crop pulse indicator")] 
+    [SerializeField] private Material animationMaterial;
+    [SerializeField] private float pulseDuration = 1f;
+    [SerializeField] private float pulseScaleMultiplier = 1.5f;
+    [SerializeField] private float pulseStartingAlpha = 1f;
+    [SerializeField] private float pulseFrequency = 0.5f;
     
-    public bool IsOccupied => currentCrop != null;
+    private bool IsOccupied => currentCrop != null;
     private bool isWatered = false;
     private bool isHovering = false;
     
@@ -43,9 +52,17 @@ public class Plot : MonoBehaviour
     private float elapsedWateredTime = 0f;
     private float maximumWateredTime = 0f;
     
-    
     private Renderer currentCropRenderer;
     private Renderer plotRenderer;
+
+    private GameObject pulseVisual;
+    private Renderer pulseRenderer;
+    private Vector3 initialPulseScale;
+    private float pulseElapsedTime = 0f;
+
+    private bool IsGrown => Math.Floor(currentCropElapsedTime / growTime) > 0;
+    private bool IsRotting => Math.Floor(currentCropElapsedTime / (growTime + timeUntilRotStart)) > 0;
+    private bool IsFullyRot => Math.Floor(currentCropElapsedTime / (growTime + timeUntilRotStart + rotTime)) > 0;
 
     private void Awake()
     {
@@ -58,7 +75,28 @@ public class Plot : MonoBehaviour
         {
             plotNeedsImg = GetComponentInChildren<Image>();
         }
+        SetupPulseVisual();
         ResetColor();
+    }
+
+    private void SetupPulseVisual()
+    {
+        if (plotRenderer == null)
+        {
+            return;
+        }
+
+        pulseVisual = Instantiate(plotRenderer.gameObject, plotRenderer.transform.parent);
+        pulseVisual.name = "CropGrownPulse";
+
+        pulseRenderer = pulseVisual.GetComponent<Renderer>();
+        if (animationMaterial != null && pulseRenderer != null)
+        {
+            pulseRenderer.material = animationMaterial;
+        }
+
+        initialPulseScale = pulseVisual.transform.localScale;
+        pulseVisual.SetActive(false);
     }
 
     private void Update()
@@ -79,20 +117,82 @@ public class Plot : MonoBehaviour
         // Grow the crop while in its growing stage and while it's in the correct season.
         if (isSeasonRight)
         {
-            if (IsOccupied && Math.Floor(currentCropElapsedTime/growTime) <= 0 && currentCrop != null && isWatered)
+            if (IsOccupied && !IsGrown && currentCrop != null && isWatered)
             {
                 GrowCrop();
             }
         }
+        
+        if (IsOccupied && IsGrown && !IsRotting)
+        {
+            currentCropElapsedTime += Time.deltaTime;
+        }
+        
         // Rot the crop when it left the growing stage
-        if (IsOccupied && Math.Floor(currentCropElapsedTime / growTime) > 0 && currentCropRenderer != null)
+        if (IsOccupied && IsGrown && IsRotting && currentCropRenderer != null)
         {
             RotCrop();
         }
 
-        if (IsOccupied && currentCropElapsedTime > (growTime + rotTime) && currentCrop != null)
+        if (IsOccupied && IsFullyRot && currentCrop != null)
         {
             DestroyCrop();
+        }
+        
+        HandleGrownPulse();
+    }
+
+    private float EaseInQuint(float progress)
+    {
+        return Mathf.Pow(progress, 5f);
+    }
+    
+    private float EaseOutQuint(float progress)
+    {
+        return 1f - Mathf.Pow(1 - progress, 5f);
+    }
+
+    private void HandleGrownPulse()
+    {
+        bool shouldPulse = IsOccupied && IsGrown && !IsRotting;
+        if (pulseVisual == null)
+        {
+            return;
+        }
+        if (shouldPulse)
+        {
+            if (!pulseVisual.activeSelf)
+            {
+                pulseVisual.SetActive(true);
+                pulseElapsedTime = 0f;
+            }
+
+            pulseElapsedTime += Time.deltaTime;
+
+            float progress = (pulseElapsedTime % (pulseDuration + pulseFrequency)) / pulseDuration;
+            float easeOutQuintProgress = EaseOutQuint(progress);
+
+            float currentMultiplier = Mathf.Lerp(1f, pulseScaleMultiplier, easeOutQuintProgress);
+            pulseVisual.transform.localScale = new Vector3(
+                initialPulseScale.x * currentMultiplier,
+                initialPulseScale.y / 2,
+                initialPulseScale.z * currentMultiplier
+            );
+
+            if (pulseRenderer != null)
+            {
+                float easeInQuintProgress = EaseInQuint(progress);
+                Color color = pulseRenderer.material.color;
+                color.a = Mathf.Lerp(pulseStartingAlpha, 0f, progress);
+                pulseRenderer.material.color = color;
+            }
+        }
+        else
+        {
+            if (pulseVisual.activeSelf)
+            {
+                pulseVisual.SetActive(false);
+            }
         }
     }
 
@@ -112,9 +212,13 @@ public class Plot : MonoBehaviour
         {
             iconToShow = currentCropData.requiredSeasonIcon;
         }
-        else if (!isWatered && Math.Floor(currentCropElapsedTime / growTime) <= 0)
+        else if (!isWatered && !IsGrown)
         {
             iconToShow = waterDropIcon;
+        } 
+        else if (IsRotting)
+        {
+            iconToShow = exclamationMarkIcon;
         }
 
         if (iconToShow != null)
@@ -163,8 +267,14 @@ public class Plot : MonoBehaviour
     private void RotCrop()
     {
         currentCropElapsedTime += Time.deltaTime;
-        float t = (currentCropElapsedTime - growTime) / rotTime;
-        currentCropRenderer.material.color = Color.Lerp(startColor, endColor, t);
+        float t = (currentCropElapsedTime - growTime - timeUntilRotStart) / rotTime;
+        currentCropRenderer.material.color = Color.Lerp(Color.white, currentCropData.rotColor, t);
+
+        float scale = Mathf.Lerp(endScale, endRotScale, t);
+        currentCrop.transform.localScale = Vector3.one * scale;
+
+        float rotation = Mathf.Lerp(0f, endRotation, t);
+        currentCrop.transform.localRotation = Quaternion.Euler(rotation, 0f, 0f);
     }
 
     private void ResetWatering()
@@ -207,7 +317,6 @@ public class Plot : MonoBehaviour
         ResetColor();
     }
     
-    
 
     public void Interact()
     {
@@ -234,7 +343,7 @@ public class Plot : MonoBehaviour
                 HUD.Instance.ShowNotification("This crop will not grow in this season.");
             }
         }
-        else if (IsOccupied && currentCropElapsedTime >= growTime && currentCropElapsedTime < (growTime + rotTime))
+        else if (IsOccupied && IsGrown && !IsFullyRot)
         {
             HarvestCrop();
         }

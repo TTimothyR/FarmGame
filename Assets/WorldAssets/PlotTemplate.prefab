@@ -361,15 +361,22 @@ MonoBehaviour:
   wateringCan: {fileID: 11400000, guid: d4b1c79c6b9c8cc4d94c1884e949e4ac, type: 2}
   shovel: {fileID: 11400000, guid: 17c764dca49dcfc4f9e058a4dd2421da, type: 2}
   waterDropIcon: {fileID: 6049605792901559095, guid: 204111dc0b57a2841851eafb9c53f033, type: 3}
+  exclamationMarkIcon: {fileID: -4337428819517682961, guid: 46b0555e63b7280498dd4fce16bdf0a3, type: 3}
   plotNeeds: {fileID: 1035802013654982089}
   smallScale: 0.015
   bigScale: 0.017
   pulseSpeed: 5
   baseColor: {r: 0.76729554, g: 0.49819854, b: 0.33056438, a: 1}
   wateredColor: {r: 0.48427665, g: 0.2685867, b: 0.10507883, a: 1}
-  growTime: 5
+  growTime: 8
+  timeUntilRotStart: 5
   startScale: 1
   endScale: 5
-  rotTime: 10
-  startColor: {r: 1, g: 1, b: 1, a: 1}
-  endColor: {r: 0, g: 0, b: 0, a: 1}
+  rotTime: 6
+  endRotation: 90
+  endRotScale: 3
+  animationMaterial: {fileID: 2100000, guid: 29dc6a85ac6ec9f4b8eced37ea630438, type: 2}
+  pulseDuration: 1
+  pulseScaleMultiplier: 1.35
+  pulseStartingAlpha: 1
+  pulseFrequency: 0.5

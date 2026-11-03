@@ -20,6 +20,7 @@ public class ScreenManager : MonoBehaviour
     [Header("Game Over Screen")]
     [SerializeField] private Canvas gameOverScreenCanvas;
     [SerializeField] private Button restartButton;
+    [SerializeField] private TextMeshProUGUI reasonLabel;
 
     [Header("Winner Screen")]
     [SerializeField] private Canvas winnerScreenCanvas;
@@ -124,7 +125,7 @@ public class ScreenManager : MonoBehaviour
         }
     }
 
-    public void ShowGameOverScreen()
+    public void ShowGameOverScreen(string message)
     {
         if (gameOverScreenCanvas != null)
         {
@@ -139,6 +140,11 @@ public class ScreenManager : MonoBehaviour
         if (blurVolume != null)
         {
             blurVolume.enabled = true;
+        }
+
+        if (reasonLabel != null)
+        {
+            reasonLabel.text = message;
         }
     }
 

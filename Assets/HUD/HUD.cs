@@ -12,6 +12,7 @@ public class HUD : MonoBehaviour
     [SerializeField] private TextMeshProUGUI lifeCounter;
     [SerializeField] private TextMeshProUGUI scoreCounter;
     [SerializeField] private TextMeshProUGUI highScoreCounter;
+    [SerializeField] private TextMeshProUGUI quotaLabel;
     [SerializeField] private Image currentSeasonIcon;
     [SerializeField] private HotbarSlot slotTemplate;
     [SerializeField] private int hotbarSlots = 5;
@@ -195,14 +196,15 @@ public class HUD : MonoBehaviour
         string secondsStr = seconds < 10 ? "0" + seconds.ToString() : seconds.ToString();
 
         seasonTimer.text = $"{minutesStr}:{secondsStr}";
+    }
 
-        // if (minutes == 0)
-        // {
-        //     seasonTimer.text = $"{seconds}";
-        // }
-        // else
-        // {
-        //     seasonTimer.text = $"{minutes}:{seconds}s";
-        // }
+    public void UpdateSeasonalQuota()
+    {
+        if (quotaLabel == null)
+        {
+            return;
+        }
+
+        quotaLabel.text = $"Quota: {GameManager.Instance.QuotaProgress}/{GameManager.Instance.CurrentQuota}";
     }
 }

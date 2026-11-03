@@ -12,8 +12,10 @@ public class GameManager : MonoBehaviour
     public int CurrentLives { get; private set; }
     public int CurrentScore { get; private set; }
     public int CurrentHighScore { get; private set; }
+    public int CurrentQuota { get; private set; }
+    public int QuotaProgress { get; private set; }
     public bool GameStarted { get; private set; }
-
+    
     private void Awake()
     {
         if (Instance == null)
@@ -38,22 +40,35 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void EndGame(string message)
+    {
+        ScreenManager.Instance.ShowGameOverScreen(message);
+        GameStarted = false;
+    }
+
+    public void RefreshQuota()
+    {
+        QuotaProgress = 0;
+        CurrentQuota = SeasonManager.Instance.GetSeasonalQuota();
+        HUD.Instance.UpdateSeasonalQuota();
+    }
+
     public void LoseLife()
     {
         --CurrentLives;
         HUD.Instance.UpdateLives();
         if (CurrentLives <= 0)
         {
-            ScreenManager.Instance.ShowGameOverScreen();
-            GameStarted = false;
-            // GameOver();
+            EndGame("Too many crops were destroyed.");
         }
     }
 
     public void GainScore()
     {
         ++CurrentScore;
+        ++QuotaProgress;
         HUD.Instance.UpdateScore();
+        HUD.Instance.UpdateSeasonalQuota();
         
         if (CurrentScore > CurrentHighScore)
         {
@@ -67,6 +82,7 @@ public class GameManager : MonoBehaviour
         GameStarted = true;
 
         CurrentHighScore = LeaderboardManager.GetPlayerHighScore(LeaderboardManager.CurrentPlayerName);
+        RefreshQuota();
 
         if (HUD.Instance != null)
         {
