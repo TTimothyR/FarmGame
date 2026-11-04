@@ -13,13 +13,11 @@ public class CameraFollow : MonoBehaviour
 
     private Vector3 basePosition;
 
-    // Set the base position to the position of the camera at the start of the game for reference later.
     private void Awake()
     {
         basePosition = transform.position;
     }
 
-    // After the player moved, update the camera to follow the player slightly
     private void LateUpdate()
     {
         if (player == null)

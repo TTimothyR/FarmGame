@@ -63,6 +63,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AwardSeasonBonus()
+    {
+        int bonus = SeasonManager.Instance.GetSeasonalBonus();
+        CurrentScore += bonus;
+        HUD.Instance.UpdateScore();
+        HUD.Instance.ShowNotification($"+{bonus} Season Completed Bonus!");
+
+        if (CurrentScore > CurrentHighScore)
+        {
+            CurrentHighScore = CurrentScore;
+            HUD.Instance.UpdateHighScore();
+        }
+    }
+
+    public bool IsQuotaMet()
+    {
+        return QuotaProgress >= CurrentQuota;
+    }
+
     public void GainScore()
     {
         ++CurrentScore;
@@ -92,6 +111,20 @@ public class GameManager : MonoBehaviour
 
     public void WinGame()
     {
+        int victoryBonus = 50;
+        int lifeBonus = CurrentLives * 10;
+        int totalBonus = victoryBonus + lifeBonus;
+
+        CurrentScore += totalBonus;
+        HUD.Instance.UpdateScore();
+        HUD.Instance.ShowNotification($"You Won! +{victoryBonus} Win Bonus, +{lifeBonus} Life Bonus!");
+        
+        if (CurrentScore > CurrentHighScore)
+        {
+            CurrentHighScore = CurrentScore;
+            HUD.Instance.UpdateHighScore();
+        }
+        
         ScreenManager.Instance.ShowWinnerScreen();
         GameStarted = false;
     }

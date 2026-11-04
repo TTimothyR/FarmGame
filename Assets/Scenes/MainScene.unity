@@ -359,6 +359,55 @@ Canvas:
   m_CorrespondingSourceObject: {fileID: 370616920315684694, guid: c284075622fc77d44948cf2c625d1065, type: 3}
   m_PrefabInstance: {fileID: 2144278138968094245}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &311783958
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 311783960}
+  - component: {fileID: 311783959}
+  m_Layer: 0
+  m_Name: NearDeathVignette
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &311783959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 311783958}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: ca8a0b5d2f4a8ed41bbf49b263aa1fbc, type: 2}
+--- !u!4 &311783960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 311783958}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 705.64764, y: 763.00433, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &339864767
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,6 +764,7 @@ MonoBehaviour:
     requiredCropsHarvested:
       minimum: 6
       maximum: 8
+    completionBonus: 0
   - type: 1
     dryoutTime: 5
     color: {r: 0.836478, g: 0.7272146, b: 0.27619547, a: 0}
@@ -722,6 +772,7 @@ MonoBehaviour:
     requiredCropsHarvested:
       minimum: 10
       maximum: 12
+    completionBonus: 0
   - type: 2
     dryoutTime: 12
     color: {r: 0.8301887, g: 0.44961765, b: 0.15402867, a: 0}
@@ -729,6 +780,7 @@ MonoBehaviour:
     requiredCropsHarvested:
       minimum: 14
       maximum: 16
+    completionBonus: 0
   - type: 3
     dryoutTime: 15
     color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 0}
@@ -736,7 +788,8 @@ MonoBehaviour:
     requiredCropsHarvested:
       minimum: 18
       maximum: 20
-  seasonDuration: 50
+    completionBonus: 0
+  seasonDuration: 20
   ground: {fileID: 1051480481}
 --- !u!1 &743514246
 GameObject:
@@ -1615,6 +1668,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5809528692602064590, guid: 1d91abaf881d71a4496dabb78c2653ce, type: 3}
+      propertyPath: nearDeathVignette
+      value: 
+      objectReference: {fileID: 311783959}
     - target: {fileID: 551529303168003901, guid: 1d91abaf881d71a4496dabb78c2653ce, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1940,3 +1997,4 @@ SceneRoots:
   - {fileID: 837332636}
   - {fileID: 2073293066}
   - {fileID: 1246050287}
+  - {fileID: 311783960}

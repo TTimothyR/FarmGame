@@ -25,7 +25,6 @@ public class MovementBehaviour : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
     
-    // Handles collision with the ground.
     private void FixedUpdate()
     {
         HandleMovement();
@@ -38,11 +37,16 @@ public class MovementBehaviour : MonoBehaviour
         );
     }
 
-    // Update the player position based on direction and movement speed.
     private void HandleMovement()
     {
         if (_rigidbody == null)
         {
+            return;
+        }
+
+        if (!GameManager.Instance.GameStarted)
+        {
+            _rigidbody.linearVelocity = new Vector3(0, 0, 0);
             return;
         }
 

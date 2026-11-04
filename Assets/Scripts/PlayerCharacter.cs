@@ -37,7 +37,6 @@ public class PlayerCharacter : BasicCharacter
         }
     }
 
-    // Handle the input for both movement directions
     private void HandleMovementInput()
     {
         if (_movementBehaviour == null || _xMovement == null || _yMovement == null)

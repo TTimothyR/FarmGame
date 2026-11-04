@@ -114,7 +114,6 @@ public class Plot : MonoBehaviour
         
         HandleCropNeeds(isSeasonRight);
         
-        // Grow the crop while in its growing stage and while it's in the correct season.
         if (isSeasonRight)
         {
             if (IsOccupied && !IsGrown && currentCrop != null && isWatered)
@@ -128,7 +127,6 @@ public class Plot : MonoBehaviour
             currentCropElapsedTime += Time.deltaTime;
         }
         
-        // Rot the crop when it left the growing stage
         if (IsOccupied && IsGrown && IsRotting && currentCropRenderer != null)
         {
             RotCrop();
@@ -226,7 +224,6 @@ public class Plot : MonoBehaviour
             plotNeeds.enabled = true;
             plotNeedsImg.sprite = iconToShow;
 
-            // Breathing pulse animation
             float wave = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f;
             float scale = Mathf.Lerp(smallScale, bigScale, wave);
             plotNeeds.transform.localScale = Vector3.one * scale;
@@ -320,7 +317,6 @@ public class Plot : MonoBehaviour
 
     public void Interact()
     {
-        // Plant a crop if the player is holding a seed and the plot is not yet occupied
         if (Inventory.Instance.HoldingItem == wateringCan && !isWatered)
         {
             isWatered = true;
@@ -331,7 +327,7 @@ public class Plot : MonoBehaviour
         {
             RemoveCurrentCrop();
         }
-        else if (Inventory.Instance.HoldingItem != wateringCan && Inventory.Instance.HoldingItem != null && !IsOccupied)
+        else if (Inventory.Instance.HoldingItem != wateringCan && Inventory.Instance.HoldingItem != shovel && Inventory.Instance.HoldingItem != null && !IsOccupied)
         {
             GameObject cropClone = Instantiate(Inventory.Instance.HoldingItem.prefab, transform);
             currentCrop = cropClone;

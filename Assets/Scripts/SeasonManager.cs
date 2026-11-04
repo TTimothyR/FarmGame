@@ -29,6 +29,7 @@ public class SeasonManager : MonoBehaviour
         public Color color;
         public ItemData seasonalCrop;
         public Range requiredCropsHarvested;
+        public int completionBonus;
     }
 
     [SerializeField] private List<Season> seasonData = new List<Season>();
@@ -84,6 +85,7 @@ public class SeasonManager : MonoBehaviour
 
     private void ChangeSeason()
     {
+        GameManager.Instance.AwardSeasonBonus();
         if (currentSeason == Seasons.Winter)
         {
             GameManager.Instance.WinGame();
@@ -137,5 +139,15 @@ public class SeasonManager : MonoBehaviour
         Range seasonalRange = seasonData[(int)currentSeason].requiredCropsHarvested;
 
         return Random.Range(seasonalRange.minimum, seasonalRange.maximum + 1);
+    }
+
+    public int GetSeasonalBonus()
+    {
+        return seasonData[(int)currentSeason].completionBonus;
+    }
+
+    public (float, float) GetElapsedSeasonTime()
+    {
+        return (elapsedInThisSeason, seasonDuration);
     }
 }

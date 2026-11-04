@@ -53,7 +53,6 @@ public class PlotManager : MonoBehaviour
 
     private void HandleMouseHover()
     {
-        // Action is ignored if it was processed by the UI.
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
             ClearHoveredPlot();
@@ -64,7 +63,6 @@ public class PlotManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            // Check if the object is actually a plot based on the Plot component.
             Plot hitPlot = hit.collider.GetComponentInParent<Plot>();
             if (hitPlot != null)
             {
@@ -87,7 +85,6 @@ public class PlotManager : MonoBehaviour
         ClearHoveredPlot();
     }
     
-    // TODO: Range check, player can only interact with a plot while in range.
     private void HandleClick()
     {
         if (currentlyHoveredPlot == null)
@@ -104,7 +101,6 @@ public class PlotManager : MonoBehaviour
         }
     }
 
-    // Clear the currently hovering plot and reset the color.
     private void ClearHoveredPlot()
     {
         if (currentlyHoveredPlot != null)

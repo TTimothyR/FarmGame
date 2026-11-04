@@ -1,11 +1,18 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class HUD : MonoBehaviour
 {
+    [Header("Quota Warning Animation")] 
+    [SerializeField] private float bigScale = 1.5f;
+    [SerializeField] private float speed = 2f;
+    [SerializeField] private Volume nearDeathVignette;
+    
     [SerializeField] private GameObject notificationList;
     [SerializeField] private GameObject hotbar;
     [SerializeField] private TextMeshProUGUI notificationTemplate;
@@ -21,8 +28,12 @@ public class HUD : MonoBehaviour
 
     private List<HotbarSlot> slotList = new List<HotbarSlot>();
     private TextMeshProUGUI seasonTimer;
+
+    private Color quotaNotMetColor = Color.indianRed;
+    private Color quotaMetColor = Color.lightGreen;
+    private float smallScale = 1f;
     
-    // The HUD is a singleton
+    
     public static HUD Instance { get; private set; }
 
     private static readonly Key[] HotbarKeys = new Key[]
@@ -45,9 +56,13 @@ public class HUD : MonoBehaviour
         {
             seasonTimer = currentSeasonIcon.GetComponentInChildren<TextMeshProUGUI>();
         }
+
+        if (quotaLabel != null)
+        {
+            quotaLabel.color = quotaNotMetColor;
+        }
     }
 
-    // Load the UI hotbar slots at the start of the game, based on how many slots are needed.
     private void Start()
     {
         CreateHotBarSlots();
@@ -56,6 +71,24 @@ public class HUD : MonoBehaviour
     private void Update()
     {
         HandleHotbarKeyInput();
+        QuotaWarningAnimation();
+    }
+
+    private void QuotaWarningAnimation()
+    {
+        (float, float) seasonTimesData = SeasonManager.Instance.GetElapsedSeasonTime();
+        if (!GameManager.Instance.IsQuotaMet() && (seasonTimesData.Item2 - seasonTimesData.Item1) <= 15f)
+        {
+            float wave = (Mathf.Sin(Time.time * speed) + 1f) * 0.5f;
+            float scale = Mathf.Lerp(smallScale, bigScale, wave);
+            quotaLabel.transform.localScale = Vector3.one * scale;
+            nearDeathVignette.enabled = true;
+        }
+        else
+        {
+            quotaLabel.transform.localScale = Vector3.one * smallScale;
+            nearDeathVignette.enabled = false;
+        }
     }
 
     private void HandleHotbarKeyInput()
@@ -130,7 +163,6 @@ public class HUD : MonoBehaviour
 
     private static readonly Color NotifBaseColor = new Color(0.85f, 0.26f, 0.25f);
 
-    // Shows a notification on screen for 5 seconds with either the base color or desired color.
     public void ShowNotification(string message)
     {
         ShowNotification(message, NotifBaseColor);
@@ -205,6 +237,9 @@ public class HUD : MonoBehaviour
             return;
         }
 
+        float progress = Mathf.Clamp01((float)GameManager.Instance.QuotaProgress / GameManager.Instance.CurrentQuota);
+        quotaLabel.color = Color.Lerp(quotaNotMetColor, quotaMetColor, progress);
+        
         quotaLabel.text = $"Quota: {GameManager.Instance.QuotaProgress}/{GameManager.Instance.CurrentQuota}";
     }
 }

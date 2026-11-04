@@ -26,13 +26,11 @@ public class Inventory : MonoBehaviour
             if (HoldingItem == targetItem)
             {
                 HoldingItem = null;
-                // HUD.Instance.ShowNotification($"Unequipped {targetItem.name}.", Color.darkRed);
                 return false;
             }
             else
             {
                 HoldingItem = targetItem;
-                // HUD.Instance.ShowNotification($"Equipped {targetItem.name}.", Color.forestGreen);
                 return true;
             }
         }

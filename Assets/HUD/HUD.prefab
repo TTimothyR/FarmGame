@@ -406,6 +406,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 089c59fe8dbe06f4d84e08b51d58729d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HUD
+  bigScale: 1.3
+  speed: 6
   notificationList: {fileID: 997124100995321921}
   hotbar: {fileID: 5463676791095961392}
   notificationTemplate: {fileID: 753873564902110924, guid: 0906d34e417eeea43825ffa4e207e268, type: 3}
