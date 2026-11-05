@@ -96,6 +96,29 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void BadInsectKillBonus()
+    {
+        ++CurrentScore;
+        HUD.Instance.UpdateScore();
+        
+        if (CurrentScore > CurrentHighScore)
+        {
+            CurrentHighScore = CurrentScore;
+            HUD.Instance.UpdateHighScore();
+        }
+    }
+
+    public void GoodInsectKillPunishment()
+    {
+        if (CurrentScore == CurrentHighScore)
+        {
+            CurrentHighScore = CurrentScore - 1;
+            HUD.Instance.UpdateHighScore();
+        }
+        --CurrentScore;
+        HUD.Instance.UpdateScore();
+    }
+
     public void StartGame()
     {
         GameStarted = true;

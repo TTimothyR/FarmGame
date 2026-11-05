@@ -6,13 +6,12 @@ using UnityEngine.UI;
 
 public class Plot : MonoBehaviour
 {
-    [SerializeField] private ItemData wateringCan;
-    [SerializeField] private ItemData shovel;
     [SerializeField] private Sprite waterDropIcon;
     [SerializeField] private Sprite exclamationMarkIcon;
     
     [Header("Needs Icon Animation")]
     [SerializeField] private Canvas plotNeeds;
+    [SerializeField] private Canvas insectIndicator;
     [SerializeField] private float smallScale = 0.01f;
     [SerializeField] private float bigScale = 0.012f;
     [SerializeField] private float pulseSpeed = 6f;
@@ -39,15 +38,18 @@ public class Plot : MonoBehaviour
     [SerializeField] private float pulseStartingAlpha = 1f;
     [SerializeField] private float pulseFrequency = 0.5f;
     
-    private bool IsOccupied => currentCrop != null;
+    public bool IsOccupied => currentCrop != null;
+    public bool HasInsect => currentInsect != null;
     private bool isWatered = false;
     private bool isHovering = false;
     
     private GameObject currentCrop = null;
+    private Insect currentInsect = null;
     private ItemData currentCropData = null;
     private float currentCropElapsedTime = 0f;
 
     private Image plotNeedsImg = null;
+    private Image insectIndicatorImg = null;
     
     private float elapsedWateredTime = 0f;
     private float maximumWateredTime = 0f;
@@ -63,7 +65,7 @@ public class Plot : MonoBehaviour
     private bool IsGrown => Math.Floor(currentCropElapsedTime / growTime) > 0;
     private bool IsRotting => Math.Floor(currentCropElapsedTime / (growTime + timeUntilRotStart)) > 0;
     private bool IsFullyRot => Math.Floor(currentCropElapsedTime / (growTime + timeUntilRotStart + rotTime)) > 0;
-
+    
     private void Awake()
     {
         if (plotRenderer == null)
@@ -73,8 +75,14 @@ public class Plot : MonoBehaviour
 
         if (plotNeeds != null)
         {
-            plotNeedsImg = GetComponentInChildren<Image>();
+            plotNeedsImg = plotNeeds.GetComponentInChildren<Image>();
         }
+
+        if (insectIndicator != null)
+        {
+            insectIndicatorImg = insectIndicator.GetComponentInChildren<Image>();
+        }
+        
         SetupPulseVisual();
         ResetColor();
     }
@@ -113,6 +121,7 @@ public class Plot : MonoBehaviour
         bool isSeasonRight = currentCropData != null && SeasonManager.Instance.GetSeasonalCrop() == currentCropData;
         
         HandleCropNeeds(isSeasonRight);
+        HandleInsectIndicator();
         
         if (isSeasonRight)
         {
@@ -194,6 +203,30 @@ public class Plot : MonoBehaviour
         }
     }
 
+    private void HandleInsectIndicator()
+    {
+        if (insectIndicator == null || insectIndicatorImg == null)
+        {
+            return;
+        }
+        
+        if (!HasInsect)
+        {
+            insectIndicator.enabled = false;
+            return;
+        }
+
+        if (!currentInsect.HasArrived)
+        {
+            insectIndicator.enabled = false;
+            return;
+        }
+
+        insectIndicatorImg.color = currentInsect is GoodInsect ? Color.lightGreen : Color.darkRed;
+        insectIndicator.enabled = true;
+        insectIndicatorImg.fillAmount = currentInsect.GetProgress();
+    }
+
     private void HandleCropNeeds(bool isSeasonRight)
     {
         if (plotNeeds == null || plotNeedsImg == null) return;
@@ -255,7 +288,14 @@ public class Plot : MonoBehaviour
 
     private void GrowCrop()
     {
-        currentCropElapsedTime += Time.deltaTime;
+        float boostMultiplier = 1;
+
+        if (currentInsect is GoodInsect goodInsect)
+        {
+            boostMultiplier = goodInsect.GetBoost();
+        }
+        
+        currentCropElapsedTime += Time.deltaTime * boostMultiplier;
         float t = currentCropElapsedTime / growTime;
         float scale = Mathf.Lerp(startScale, endScale, t);
         currentCrop.transform.localScale = Vector3.one * scale;
@@ -263,7 +303,13 @@ public class Plot : MonoBehaviour
 
     private void RotCrop()
     {
-        currentCropElapsedTime += Time.deltaTime;
+        float boostMultiplier = 1;
+
+        if (currentInsect is GoodInsect goodInsect)
+        {
+            boostMultiplier = goodInsect.GetBoost();
+        }
+        currentCropElapsedTime += Time.deltaTime / boostMultiplier;
         float t = (currentCropElapsedTime - growTime - timeUntilRotStart) / rotTime;
         currentCropRenderer.material.color = Color.Lerp(Color.white, currentCropData.rotColor, t);
 
@@ -288,10 +334,15 @@ public class Plot : MonoBehaviour
         currentCropRenderer = null;
         currentCropElapsedTime = 0f;
         currentCropData = null;
+
+        if (currentInsect != null)
+        {
+            currentInsect.Kill();
+        }
         ResetWatering();
     }
 
-    private void DestroyCrop()
+    public void DestroyCrop()
     {
         RemoveCurrentCrop();
         GameManager.Instance.LoseLife();
@@ -317,17 +368,17 @@ public class Plot : MonoBehaviour
 
     public void Interact()
     {
-        if (Inventory.Instance.HoldingItem == wateringCan && !isWatered)
+        if (Inventory.Instance.HoldingItem == Inventory.Instance.WateringCan && !isWatered)
         {
             isWatered = true;
             maximumWateredTime = SeasonManager.Instance.GetDryOutTime();
             SetColor();
         } 
-        else if (Inventory.Instance.HoldingItem == shovel && IsOccupied)
+        else if (Inventory.Instance.HoldingItem == Inventory.Instance.Shovel && IsOccupied)
         {
             RemoveCurrentCrop();
         }
-        else if (Inventory.Instance.HoldingItem != wateringCan && Inventory.Instance.HoldingItem != shovel && Inventory.Instance.HoldingItem != null && !IsOccupied)
+        else if (Inventory.Instance.HoldingItem != Inventory.Instance.WateringCan && Inventory.Instance.HoldingItem != Inventory.Instance.Shovel && Inventory.Instance.HoldingItem != null && !IsOccupied)
         {
             GameObject cropClone = Instantiate(Inventory.Instance.HoldingItem.prefab, transform);
             currentCrop = cropClone;
@@ -343,6 +394,16 @@ public class Plot : MonoBehaviour
         {
             HarvestCrop();
         }
+    }
+
+    public void AddInsect(Insect newInsect)
+    {
+        if (currentInsect != null)
+        {
+            return;
+        }
+
+        currentInsect = newInsect;
     }
 
     private void SetColor()

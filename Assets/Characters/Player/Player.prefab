@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2103613094224263838}
   - component: {fileID: 3299853695828119434}
   - component: {fileID: 7493743040957171196}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217,3 +217,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ce7bbaf1292ac41abd9f1ba810e9e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
+  shovel: {fileID: 11400000, guid: 17c764dca49dcfc4f9e058a4dd2421da, type: 2}
+  wateringCan: {fileID: 11400000, guid: d4b1c79c6b9c8cc4d94c1884e949e4ac, type: 2}

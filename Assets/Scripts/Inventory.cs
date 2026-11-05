@@ -3,7 +3,12 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    [SerializeField] private ItemData shovel;
+    [SerializeField] private ItemData wateringCan;
+    
     public ItemData HoldingItem { get; private set; }
+    public ItemData Shovel => shovel;
+    public ItemData WateringCan => wateringCan;
     
     public static Inventory Instance { get; private set; }
 
