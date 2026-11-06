@@ -1,23 +1,22 @@
-using System;
 using UnityEngine;
 
 public class Billboard : MonoBehaviour
 {
-    private Transform camera;
+    private Transform _camera;
 
     private void Start()
     {
         if (Camera.main != null)
         {
-            camera = Camera.main.transform;
+            _camera = Camera.main.transform;
         }
     }
 
     private void LateUpdate()
     {
-        if (camera != null)
+        if (_camera != null)
         {
-            transform.forward = camera.forward;
+            transform.forward = _camera.forward;
         }
     }
 }

@@ -9,7 +9,7 @@ public static class LeaderboardManager
 
     private static string FilePath => Path.Combine(Application.persistentDataPath, "leaderboard.json");
 
-    public static LBEntryData LoadLeaderboard()
+    private static LBEntryData LoadLeaderboard()
     {
         if (!File.Exists(FilePath))
         {
@@ -70,6 +70,6 @@ public static class LeaderboardManager
         Entry playerEntry =
             data.entries.Find(entry => entry.playerName.Equals(playerName, StringComparison.OrdinalIgnoreCase));
 
-        return playerEntry != null ? playerEntry.score : 0;
+        return playerEntry?.score ?? 0;
     }
 }

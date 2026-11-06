@@ -1,7 +1,7 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class PlotManager : MonoBehaviour
 {
@@ -15,12 +15,14 @@ public class PlotManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private float maximumInteractionDistance = 5f;
 
-    private Camera mainCamera;
-    private Plot currentlyHoveredPlot = null;
+    private Camera _mainCamera;
+    private Plot _currentlyHoveredPlot;
+
+    public List<Plot> ActivePlots { get; private set; } = new List<Plot>();
 
     private void Start()
     {
-        mainCamera = Camera.main;
+        _mainCamera = Camera.main;
         CreatePlots();
     }
 
@@ -59,7 +61,7 @@ public class PlotManager : MonoBehaviour
             return;
         }
 
-        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
@@ -71,11 +73,11 @@ public class PlotManager : MonoBehaviour
                     ClearHoveredPlot();
                     return;
                 }
-                if (hitPlot != currentlyHoveredPlot)
+                if (hitPlot != _currentlyHoveredPlot)
                 {
                     ClearHoveredPlot();
-                    currentlyHoveredPlot = hitPlot;
-                    currentlyHoveredPlot.OnHoverEnter();
+                    _currentlyHoveredPlot = hitPlot;
+                    _currentlyHoveredPlot.OnHoverEnter();
                 }
 
                 return;
@@ -87,26 +89,26 @@ public class PlotManager : MonoBehaviour
     
     private void HandleClick()
     {
-        if (currentlyHoveredPlot == null)
+        if (_currentlyHoveredPlot == null)
         {
             return;
         }
-        if (!IsPlayerInRange(currentlyHoveredPlot.transform))
+        if (!IsPlayerInRange(_currentlyHoveredPlot.transform))
         {
             return;
         }
-        if (Mouse.current.leftButton.wasPressedThisFrame && currentlyHoveredPlot != null)
+        if (Mouse.current.leftButton.wasPressedThisFrame && _currentlyHoveredPlot != null)
         {
-            currentlyHoveredPlot.Interact();
+            _currentlyHoveredPlot.Interact();
         }
     }
 
     private void ClearHoveredPlot()
     {
-        if (currentlyHoveredPlot != null)
+        if (_currentlyHoveredPlot != null)
         {
-            currentlyHoveredPlot.OnHoverExit();
-            currentlyHoveredPlot = null;
+            _currentlyHoveredPlot.OnHoverExit();
+            _currentlyHoveredPlot = null;
         }
     }
 
@@ -122,6 +124,8 @@ public class PlotManager : MonoBehaviour
 
             clone.transform.position = new Vector3(startPosition.x + (row * spacing.x), startPosition.y, startPosition.z +
                 (column * spacing.z));
+            
+            ActivePlots.Add(clone.GetComponent<Plot>());
         }
     }
 }

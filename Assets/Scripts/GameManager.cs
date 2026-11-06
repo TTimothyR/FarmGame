@@ -1,13 +1,13 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private int maxLives = 3;
+    [SerializeField] private int victoryBonus = 50;
+    [SerializeField] private int lifeBonus = 10;
     
     public int CurrentLives { get; private set; }
     public int CurrentScore { get; private set; }
@@ -143,9 +143,7 @@ public class GameManager : MonoBehaviour
 
     public void WinGame()
     {
-        int victoryBonus = 50;
-        int lifeBonus = CurrentLives * 10;
-        int totalBonus = victoryBonus + lifeBonus;
+        int totalBonus = victoryBonus + (CurrentLives * lifeBonus);
 
         CurrentScore += totalBonus;
         HUD.Instance.UpdateScore();

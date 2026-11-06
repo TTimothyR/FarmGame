@@ -9,20 +9,20 @@ public class HotbarSlot : MonoBehaviour
     [SerializeField] private Image seasonImage;
     [SerializeField] private TextMeshProUGUI keybindText;
     [SerializeField] private Button button;
-    
-    public ItemData AssignedItem { get; private set; }
 
-    private Action<ItemData, HotbarSlot> onSlotClicked;
+    private ItemData _assignedItem;
+
+    private Action<ItemData, HotbarSlot> _onSlotClicked;
 
     private void Awake()
     {
-        button.onClick.AddListener(() => onSlotClicked?.Invoke(AssignedItem, this));
+        button.onClick.AddListener(() => _onSlotClicked?.Invoke(_assignedItem, this));
     }
 
     public void Setup(ItemData item, int keybindNumber, Action<ItemData, HotbarSlot> clickCallback)
     {
-        AssignedItem = item;
-        onSlotClicked = clickCallback;
+        _assignedItem = item;
+        _onSlotClicked = clickCallback;
         keybindText.text = keybindNumber.ToString();
 
         if (item != null)

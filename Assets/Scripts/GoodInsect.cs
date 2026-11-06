@@ -2,28 +2,27 @@ using UnityEngine;
 
 public class GoodInsect : Insect
 {
-    // [SerializeField] private int bonusScore = 3;
     [SerializeField] private float pollinateDuration = 3f;
     [SerializeField] private float pollinateBoost = 1.2f;
 
-    private float elapsedPollinateTime = 0f;
-    private bool isPollinating = false;
+    private float _elapsedPollinateTime;
+    private bool _isPollinating;
 
     protected override void OnArrived()
     {
-        isPollinating = true;
-        elapsedPollinateTime = 0f;
+        _isPollinating = true;
+        _elapsedPollinateTime = 0f;
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (isPollinating)
+        if (_isPollinating)
         {
-            elapsedPollinateTime += Time.deltaTime;
+            _elapsedPollinateTime += Time.deltaTime;
 
-            if (elapsedPollinateTime >= pollinateDuration)
+            if (_elapsedPollinateTime >= pollinateDuration)
             {
                 base.Kill(false);
             }
@@ -32,7 +31,7 @@ public class GoodInsect : Insect
 
     public override float GetProgress()
     {
-        return Mathf.Clamp01(elapsedPollinateTime / pollinateDuration);
+        return Mathf.Clamp01(_elapsedPollinateTime / pollinateDuration);
     }
 
     public override void Kill(bool affectScore)

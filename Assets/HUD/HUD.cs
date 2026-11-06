@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -11,6 +10,7 @@ public class HUD : MonoBehaviour
     [Header("Quota Warning Animation")] 
     [SerializeField] private float bigScale = 1.5f;
     [SerializeField] private float speed = 2f;
+    [SerializeField] private float quotaNotMetTimeTrigger = 15f;
     [SerializeField] private Volume nearDeathVignette;
     
     [SerializeField] private GameObject notificationList;
@@ -26,12 +26,12 @@ public class HUD : MonoBehaviour
     [SerializeField] private float notificationDuration = 5f;
     [SerializeField] private List<ItemData> slotItems;
 
-    private List<HotbarSlot> slotList = new List<HotbarSlot>();
-    private TextMeshProUGUI seasonTimer;
+    private readonly List<HotbarSlot> _slotList = new List<HotbarSlot>();
+    private TextMeshProUGUI _seasonTimer;
 
-    private Color quotaNotMetColor = Color.indianRed;
-    private Color quotaMetColor = Color.lightGreen;
-    private float smallScale = 1f;
+    private readonly Color _quotaNotMetColor = Color.indianRed;
+    private readonly Color _quotaMetColor = Color.lightGreen;
+    private const float SmallScale = 1f;
     
     
     public static HUD Instance { get; private set; }
@@ -54,12 +54,12 @@ public class HUD : MonoBehaviour
 
         if (currentSeasonIcon != null)
         {
-            seasonTimer = currentSeasonIcon.GetComponentInChildren<TextMeshProUGUI>();
+            _seasonTimer = currentSeasonIcon.GetComponentInChildren<TextMeshProUGUI>();
         }
 
         if (quotaLabel != null)
         {
-            quotaLabel.color = quotaNotMetColor;
+            quotaLabel.color = _quotaNotMetColor;
         }
     }
 
@@ -77,17 +77,24 @@ public class HUD : MonoBehaviour
     private void QuotaWarningAnimation()
     {
         (float, float) seasonTimesData = SeasonManager.Instance.GetElapsedSeasonTime();
-        if (!GameManager.Instance.IsQuotaMet() && (seasonTimesData.Item2 - seasonTimesData.Item1) <= 15f)
+        if (!GameManager.Instance.IsQuotaMet() && (seasonTimesData.Item2 - seasonTimesData.Item1) <= quotaNotMetTimeTrigger)
         {
             float wave = (Mathf.Sin(Time.time * speed) + 1f) * 0.5f;
-            float scale = Mathf.Lerp(smallScale, bigScale, wave);
+            float scale = Mathf.Lerp(SmallScale, bigScale, wave);
             quotaLabel.transform.localScale = Vector3.one * scale;
-            nearDeathVignette.enabled = true;
+
+            if (nearDeathVignette != null)
+            {
+                nearDeathVignette.enabled = true;
+            }
         }
         else
         {
-            quotaLabel.transform.localScale = Vector3.one * smallScale;
-            nearDeathVignette.enabled = false;
+            quotaLabel.transform.localScale = Vector3.one * SmallScale;
+            if (nearDeathVignette != null)
+            {
+                nearDeathVignette.enabled = false;
+            }
         }
     }
 
@@ -98,7 +105,7 @@ public class HUD : MonoBehaviour
             return;
         }
 
-        int slotsToCheck = Mathf.Min(slotList.Count, HotbarKeys.Length);
+        int slotsToCheck = Mathf.Min(_slotList.Count, HotbarKeys.Length);
 
         for (int index = 0; index < slotsToCheck; index++)
         {
@@ -112,13 +119,13 @@ public class HUD : MonoBehaviour
 
     private void SelectSlotByIndex(int index)
     {
-        if (index < 0 || index >= slotList.Count)
+        if (index < 0 || index >= _slotList.Count)
         {
             return;
         }
 
         ItemData itemInSlot = (index < slotItems.Count) ? slotItems[index] : null;
-        OnSlotPressed(itemInSlot, slotList[index]);
+        OnSlotPressed(itemInSlot, _slotList[index]);
     }
 
     private void CreateHotBarSlots()
@@ -129,7 +136,7 @@ public class HUD : MonoBehaviour
             ItemData itemInSlot = (i < slotItems.Count) ? slotItems[i] : null;
             
             clone.Setup(itemInSlot, i+1, OnSlotPressed);
-            slotList.Add(clone);
+            _slotList.Add(clone);
         }
     }
 
@@ -147,9 +154,9 @@ public class HUD : MonoBehaviour
         if (selectedItem != null)
         {
             bool isEquipped = Inventory.Instance.ToggleItem(selectedItem);
-            if (isEquipped == true)
+            if (isEquipped)
             {
-                foreach (HotbarSlot iterateSlot in slotList)
+                foreach (HotbarSlot iterateSlot in _slotList)
                 {
                     if (iterateSlot != slot)
                     {
@@ -221,7 +228,7 @@ public class HUD : MonoBehaviour
 
     public void UpdateSeasonTimer(float remainingSeconds)
     {
-        if (seasonTimer == null)
+        if (_seasonTimer == null)
         {
             return;
         }
@@ -232,7 +239,7 @@ public class HUD : MonoBehaviour
         string minutesStr = "0" + minutes.ToString();
         string secondsStr = seconds < 10 ? "0" + seconds.ToString() : seconds.ToString();
 
-        seasonTimer.text = $"{minutesStr}:{secondsStr}";
+        _seasonTimer.text = $"{minutesStr}:{secondsStr}";
     }
 
     public void UpdateSeasonalQuota()
@@ -243,7 +250,7 @@ public class HUD : MonoBehaviour
         }
 
         float progress = Mathf.Clamp01((float)GameManager.Instance.QuotaProgress / GameManager.Instance.CurrentQuota);
-        quotaLabel.color = Color.Lerp(quotaNotMetColor, quotaMetColor, progress);
+        quotaLabel.color = Color.Lerp(_quotaNotMetColor, _quotaMetColor, progress);
         
         quotaLabel.text = $"Quota: {GameManager.Instance.QuotaProgress}/{GameManager.Instance.CurrentQuota}";
     }

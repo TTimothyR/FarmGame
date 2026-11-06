@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using Random = UnityEngine.Random;
 
 public class SeasonManager : MonoBehaviour
@@ -39,10 +38,10 @@ public class SeasonManager : MonoBehaviour
     
     public static SeasonManager Instance { get; private set; }
 
-    private Seasons currentSeason = Seasons.Spring;
-    private float elapsedInThisSeason = 0f;
+    private Seasons _currentSeason = Seasons.Spring;
+    private float _elapsedInThisSeason;
 
-    private Renderer groundRenderer;
+    private Renderer _groundRenderer;
     
     private void Awake()
     {
@@ -55,9 +54,9 @@ public class SeasonManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (groundRenderer == null && ground != null)
+        if (_groundRenderer == null && ground != null)
         {
-            groundRenderer = ground.GetComponent<Renderer>();
+            _groundRenderer = ground.GetComponent<Renderer>();
         }
         SetCurrentSeasonColor();
     }
@@ -73,12 +72,12 @@ public class SeasonManager : MonoBehaviour
 
     private void HandleSeason()
     {
-        elapsedInThisSeason += Time.deltaTime;
-        HUD.Instance.UpdateSeasonTimer(seasonDuration - elapsedInThisSeason);
+        _elapsedInThisSeason += Time.deltaTime;
+        HUD.Instance.UpdateSeasonTimer(seasonDuration - _elapsedInThisSeason);
 
-        if (elapsedInThisSeason >= seasonDuration)
+        if (_elapsedInThisSeason >= seasonDuration)
         {
-            elapsedInThisSeason -= seasonDuration;
+            _elapsedInThisSeason -= seasonDuration;
             ChangeSeason();
         }
     }
@@ -86,13 +85,13 @@ public class SeasonManager : MonoBehaviour
     private void ChangeSeason()
     {
         GameManager.Instance.AwardSeasonBonus();
-        if (currentSeason == Seasons.Winter)
+        if (_currentSeason == Seasons.Winter)
         {
             GameManager.Instance.WinGame();
             return;
         }
 
-        currentSeason = (Seasons)(((int)currentSeason + 1) % (int)Seasons.Count);
+        _currentSeason = (Seasons)(((int)_currentSeason + 1) % (int)Seasons.Count);
         if (GameManager.Instance.QuotaProgress < GameManager.Instance.CurrentQuota)
         {
             GameManager.Instance.EndGame("You didn't meet the seasonal quota.");
@@ -108,46 +107,46 @@ public class SeasonManager : MonoBehaviour
 
     private void SetCurrentSeasonColor()
     {
-        if (groundRenderer != null)
+        if (_groundRenderer != null)
         {
-            groundRenderer.material.color = seasonData[(int)currentSeason].color;
+            _groundRenderer.material.color = seasonData[(int)_currentSeason].color;
         }
     }
 
     public Seasons GetCurrentSeason()
     {
-        return currentSeason;
+        return _currentSeason;
     }
 
     private Sprite GetCurrentSeasonIcon()
     {
-        return seasonData[(int)currentSeason].seasonalCrop.requiredSeasonIcon;
+        return seasonData[(int)_currentSeason].seasonalCrop.requiredSeasonIcon;
     }
     
     public float GetDryOutTime()
     {
-        return seasonData[(int)currentSeason].dryoutTime;
+        return seasonData[(int)_currentSeason].dryoutTime;
     }
 
     public ItemData GetSeasonalCrop()
     {
-        return seasonData[(int)currentSeason].seasonalCrop;
+        return seasonData[(int)_currentSeason].seasonalCrop;
     }
 
     public int GetSeasonalQuota()
     {
-        Range seasonalRange = seasonData[(int)currentSeason].requiredCropsHarvested;
+        Range seasonalRange = seasonData[(int)_currentSeason].requiredCropsHarvested;
 
         return Random.Range(seasonalRange.minimum, seasonalRange.maximum + 1);
     }
 
     public int GetSeasonalBonus()
     {
-        return seasonData[(int)currentSeason].completionBonus;
+        return seasonData[(int)_currentSeason].completionBonus;
     }
 
     public (float, float) GetElapsedSeasonTime()
     {
-        return (elapsedInThisSeason, seasonDuration);
+        return (_elapsedInThisSeason, seasonDuration);
     }
 }

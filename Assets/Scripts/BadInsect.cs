@@ -4,24 +4,24 @@ public class BadInsect : Insect
 {
     [SerializeField] private float eatDuration = 4f;
 
-    private float elapsedEatingTime = 0f;
-    private bool isEating = false;
+    private float _elapsedEatingTime;
+    private bool _isEating;
 
     protected override void OnArrived()
     {
-        isEating = true;
-        elapsedEatingTime = 0f;
+        _isEating = true;
+        _elapsedEatingTime = 0f;
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (isEating && !isTutorialInsect)
+        if (_isEating && !IsTutorialInsect)
         {
-            elapsedEatingTime += Time.deltaTime;
+            _elapsedEatingTime += Time.deltaTime;
 
-            if (elapsedEatingTime >= eatDuration)
+            if (_elapsedEatingTime >= eatDuration)
             {
                 DestroyCrop();
             }
@@ -30,7 +30,7 @@ public class BadInsect : Insect
 
     public override float GetProgress()
     {
-        return Mathf.Clamp01(elapsedEatingTime / eatDuration);
+        return Mathf.Clamp01(_elapsedEatingTime / eatDuration);
     }
 
     public override void Kill(bool affectScore)
@@ -46,7 +46,7 @@ public class BadInsect : Insect
 
     private void DestroyCrop()
     {
-        targetPlot.DestroyCrop();
+        TargetPlot.DestroyCrop();
         Destroy(gameObject);
     }
 }

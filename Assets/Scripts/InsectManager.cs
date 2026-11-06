@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
@@ -9,7 +8,7 @@ public class InsectManager : MonoBehaviour
 {
     public static InsectManager Instance { get; private set; }
     
-    [SerializeField] private Transform plotManager;
+    [SerializeField] private PlotManager plotManager;
     [SerializeField] private int tutorialPlotIndex = 11;
     [SerializeField] private GameObject goodInsectTemplate;
     [SerializeField] private GameObject badInsectTemplate;
@@ -21,12 +20,12 @@ public class InsectManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private float maximumKillDistance = 4f;
 
-    private float timer = 0f;
-    private Camera mainCamera;
+    private float _timer;
+    private Camera _mainCamera;
 
     private void Start()
     {
-        mainCamera = Camera.main;
+        _mainCamera = Camera.main;
     }
 
     private void Awake()
@@ -54,10 +53,10 @@ public class InsectManager : MonoBehaviour
             return;
         }
 
-        timer += Time.deltaTime;
-        if (timer >= spawnInterval)
+        _timer += Time.deltaTime;
+        if (_timer >= spawnInterval)
         {
-            timer = 0f;
+            _timer = 0f;
             SpawnRandomInsect();
         }
 
@@ -84,7 +83,7 @@ public class InsectManager : MonoBehaviour
                 return;
             }
 
-            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
@@ -107,9 +106,9 @@ public class InsectManager : MonoBehaviour
     {
         int index = Random.Range(0, spawnPoints.transform.childCount);
         Transform spawnPoint = spawnPoints.transform.GetChild(index);
-        
-        Plot targetPlot = plotManager.GetChild(tutorialPlotIndex).GetComponent<Plot>();
 
+        Plot targetPlot = plotManager.ActivePlots[tutorialPlotIndex];
+        
         GameObject insectToSpawn = badInsectTemplate;
         GameObject clone = Instantiate(insectToSpawn, transform);
         clone.transform.position = spawnPoint.position;
@@ -152,7 +151,7 @@ public class InsectManager : MonoBehaviour
 
     private Plot GetFurthestOccupiedPlot(Vector3 spawnPosition)
     {
-        Plot[] allPlots = FindObjectsByType<Plot>();
+        List<Plot> allPlots = plotManager.ActivePlots;
 
         Plot furthestPlot = null;
         float maxDistance = -1f;

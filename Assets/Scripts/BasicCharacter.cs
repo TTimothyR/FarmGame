@@ -1,12 +1,11 @@
-using System;
 using UnityEngine;
 
 public class BasicCharacter : MonoBehaviour
 {
-    protected MovementBehaviour _movementBehaviour;
+    protected MovementBehaviour MovementBehaviour;
 
-    protected virtual void Awake()
+    private void Awake()
     {
-        _movementBehaviour = GetComponent<MovementBehaviour>();
+        MovementBehaviour = GetComponent<MovementBehaviour>();
     }
 }

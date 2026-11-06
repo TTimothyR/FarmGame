@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
@@ -11,11 +10,11 @@ public class CameraFollow : MonoBehaviour
 
     [SerializeField] private float followSpeed = 5.0f;
 
-    private Vector3 basePosition;
+    private Vector3 _basePosition;
 
     private void Awake()
     {
-        basePosition = transform.position;
+        _basePosition = transform.position;
     }
 
     private void LateUpdate()
@@ -29,7 +28,7 @@ public class CameraFollow : MonoBehaviour
         playerDisplacement.y = 0;
 
         Vector3 offset = Vector3.ClampMagnitude(playerDisplacement * nudgeMultiplier, maxDisplacement);
-        Vector3 targetPosition = basePosition + offset;
+        Vector3 targetPosition = _basePosition + offset;
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
     }
 }

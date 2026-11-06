@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
@@ -30,19 +29,18 @@ public class Inventory : MonoBehaviour
 
     public bool ToggleItem(ItemData targetItem)
     {
-        if (targetItem != null)
+        if (targetItem == null)
         {
-            if (HoldingItem == targetItem)
-            {
-                HoldingItem = null;
-                return false;
-            }
-            else
-            {
-                HoldingItem = targetItem;
-                return true;
-            }
+            return false;
         }
-        return false;
+
+        if (HoldingItem == targetItem)
+        {
+            HoldingItem = null;
+            return false;
+        }
+
+        HoldingItem = targetItem;
+        return true;
     }
 }

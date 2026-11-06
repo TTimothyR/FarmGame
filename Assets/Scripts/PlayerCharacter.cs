@@ -1,32 +1,20 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerCharacter : BasicCharacter
 {
-    [SerializeField] private InputActionAsset _inputAsset;
-    [SerializeField] private InputActionReference _xMovement;
-    [SerializeField] private InputActionReference _yMovement;
-    
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        if (_inputAsset == null)
-        {
-            return;
-        }
-    }
+    [SerializeField] private InputActionAsset inputAsset;
+    [SerializeField] private InputActionReference xMovement;
+    [SerializeField] private InputActionReference yMovement;
 
     private void OnEnable()
     {
-        if (_inputAsset == null)
+        if (inputAsset == null)
         {
             return;
         }
         
-        _inputAsset.Enable();
+        inputAsset.Enable();
     }
 
     private void Update()
@@ -39,15 +27,15 @@ public class PlayerCharacter : BasicCharacter
 
     private void HandleMovementInput()
     {
-        if (_movementBehaviour == null || _xMovement == null || _yMovement == null)
+        if (MovementBehaviour == null || xMovement == null || yMovement == null)
         {
             return;
         }
 
-        float horizontalMovementInput = _xMovement.action.ReadValue<float>();
-        float verticalMovementInput = _yMovement.action.ReadValue<float>();
+        float horizontalMovementInput = xMovement.action.ReadValue<float>();
+        float verticalMovementInput = yMovement.action.ReadValue<float>();
 
         Vector3 movement = (horizontalMovementInput * Vector3.forward) + (verticalMovementInput * Vector3.left);
-        _movementBehaviour.DesiredMovementDirection = movement;
+        MovementBehaviour.DesiredMovementDirection = movement;
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -21,9 +20,9 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI tutorialInstructionText;
 
     public TutorialSteps CurrentStep { get; private set; } = 0;
-    public bool IsTutorialActive { get; private set; } = false;
+    public bool IsTutorialActive { get; private set; }
 
-    private readonly string[] instructions = new string[]
+    private readonly string[] _instructions = new string[]
     {
         "Walk around using WASD.",
         "Equip your Radish Seed from the hotbar and click a plot to plant it.",
@@ -80,7 +79,7 @@ public class TutorialManager : MonoBehaviour
     
     private void ShowCurrentStep()
     {
-        tutorialInstructionText.text = $"({(int)CurrentStep + 1}/{(int)TutorialSteps.Count}) - {instructions[(int)CurrentStep]}";
+        tutorialInstructionText.text = $"({(int)CurrentStep + 1}/{(int)TutorialSteps.Count}) - {_instructions[(int)CurrentStep]}";
     }
 
     private void FinishTutorial()

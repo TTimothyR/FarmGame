@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -32,10 +31,10 @@ public class ScreenManager : MonoBehaviour
     [SerializeField] private Canvas hudCanvas;
     [SerializeField] private Volume blurVolume;
 
-    private TextMeshProUGUI playText;
+    private TextMeshProUGUI _playText;
 
-    private float elapsedDisplayTime = 0f;
-    private bool displayingError = false;
+    private float _elapsedDisplayTime;
+    private bool _displayingError;
     
     private void Awake()
     {
@@ -50,7 +49,7 @@ public class ScreenManager : MonoBehaviour
         if (playButton != null)
         {
             playButton.onClick.AddListener(StartGame);
-            playText = playButton.GetComponentInChildren<TextMeshProUGUI>();
+            _playText = playButton.GetComponentInChildren<TextMeshProUGUI>();
         }
 
         if (restartButton != null)
@@ -68,18 +67,18 @@ public class ScreenManager : MonoBehaviour
 
     private void Update()
     {
-        if (displayingError)
+        if (_displayingError)
         {
-            elapsedDisplayTime += Time.deltaTime;
+            _elapsedDisplayTime += Time.deltaTime;
 
-            if (elapsedDisplayTime >= playErrorDisplayTime)
+            if (_elapsedDisplayTime >= playErrorDisplayTime)
             {
-                displayingError = false;
-                elapsedDisplayTime = 0f;
+                _displayingError = false;
+                _elapsedDisplayTime = 0f;
 
-                if (playText != null)
+                if (_playText != null)
                 {
-                    playText.text = "Play";
+                    _playText.text = "Play";
                 }
             }
         }
@@ -87,7 +86,7 @@ public class ScreenManager : MonoBehaviour
 
     private void DisplayLeaderboard()
     {
-        List<Entry> topScores = LeaderboardManager.GetTopScores(10);
+        List<Entry> topScores = LeaderboardManager.GetTopScores();
 
         for (int index = 0; index < topScores.Count; index++)
         {
@@ -100,11 +99,11 @@ public class ScreenManager : MonoBehaviour
     {
         if (playerNameInput.text == "")
         {
-            if (playText != null)
+            if (_playText != null)
             {
-                playText.text = "Enter a name!";
-                displayingError = true;
-                elapsedDisplayTime = 0f;
+                _playText.text = "Enter a name!";
+                _displayingError = true;
+                _elapsedDisplayTime = 0f;
             }
             return;
         }
