@@ -571,6 +571,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   maxLives: 3
+  victoryBonus: 50
+  lifeBonus: 10
 --- !u!1 &576068117
 GameObject:
   m_ObjectHideFlags: 0
@@ -1784,6 +1786,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c830a0bc85c81748be0020f30dc61b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InsectManager
+  plotManager: {fileID: 837332636}
+  tutorialPlotIndex: 11
   goodInsectTemplate: {fileID: 91019471248907617, guid: b17b8eb27be037845a570236d97dd637, type: 3}
   badInsectTemplate: {fileID: 1003984049720116289, guid: 505fe616a45df224aaf4382432417c4d, type: 3}
   spawnPoints: {fileID: 2145472747}

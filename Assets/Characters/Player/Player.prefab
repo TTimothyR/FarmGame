@@ -189,9 +189,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca0d9e3f4735cb24794c806ce8278c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCharacter
-  _inputAsset: {fileID: -944628639613478452, guid: e06f1d50bf2f69749acdc7d15c35e031, type: 3}
-  _xMovement: {fileID: -8121829489230074350, guid: e06f1d50bf2f69749acdc7d15c35e031, type: 3}
-  _yMovement: {fileID: 5901965292910554255, guid: e06f1d50bf2f69749acdc7d15c35e031, type: 3}
+  inputAsset: {fileID: -944628639613478452, guid: e06f1d50bf2f69749acdc7d15c35e031, type: 3}
+  xMovement: {fileID: -8121829489230074350, guid: e06f1d50bf2f69749acdc7d15c35e031, type: 3}
+  yMovement: {fileID: 5901965292910554255, guid: e06f1d50bf2f69749acdc7d15c35e031, type: 3}
 --- !u!114 &4183614258424389507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf58164cf40813443b895fc64888b234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementBehaviour
-  _movementSpeed: 10
+  movementSpeed: 15
 --- !u!114 &2559116664109698644
 MonoBehaviour:
   m_ObjectHideFlags: 0
