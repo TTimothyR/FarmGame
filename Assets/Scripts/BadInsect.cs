@@ -17,7 +17,7 @@ public class BadInsect : Insect
     {
         base.Update();
 
-        if (isEating)
+        if (isEating && !isTutorialInsect)
         {
             elapsedEatingTime += Time.deltaTime;
 
@@ -33,12 +33,15 @@ public class BadInsect : Insect
         return Mathf.Clamp01(elapsedEatingTime / eatDuration);
     }
 
-    public override void Kill()
+    public override void Kill(bool affectScore)
     {
-        base.Kill();
-        
-        HUD.Instance.ShowNotification($"+1 For killing a bad insect!", Color.darkGreen);
-        GameManager.Instance.BadInsectKillBonus();
+        base.Kill(affectScore);
+
+        if (affectScore)
+        {
+            HUD.Instance.ShowNotification($"+1 For killing a bad insect!", Color.darkGreen);
+            GameManager.Instance.BadInsectKillBonus();
+        }
     }
 
     private void DestroyCrop()

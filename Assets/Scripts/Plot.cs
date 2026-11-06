@@ -337,7 +337,7 @@ public class Plot : MonoBehaviour
 
         if (currentInsect != null)
         {
-            currentInsect.Kill();
+            currentInsect.Kill(false);
         }
         ResetWatering();
     }
@@ -348,8 +348,61 @@ public class Plot : MonoBehaviour
         GameManager.Instance.LoseLife();
     }
 
+    private void WaterCrop()
+    {
+        TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.WaterCrop);
+        isWatered = true;
+        maximumWateredTime = SeasonManager.Instance.GetDryOutTime();
+        SetColor();
+    }
+
+    private void PlantCrop()
+    {
+        if (TutorialManager.Instance.IsTutorialActive)
+        {
+            TutorialManager.TutorialSteps step = TutorialManager.Instance.CurrentStep;
+
+            if (step != TutorialManager.TutorialSteps.PlantRadish &&
+                step != TutorialManager.TutorialSteps.PlantPumpkin)
+            {
+                HUD.Instance.FollowTutorialNotification();
+                return;
+            }
+
+            if (step == TutorialManager.TutorialSteps.PlantPumpkin &&
+                Inventory.Instance.HoldingItem != Inventory.Instance.PumpkinSeed)
+            {
+                HUD.Instance.FollowTutorialNotification();
+                return;
+            }
+        }
+        
+        GameObject cropClone = Instantiate(Inventory.Instance.HoldingItem.prefab, transform);
+        currentCrop = cropClone;
+        currentCropData = Inventory.Instance.HoldingItem;
+        currentCropRenderer = cropClone.GetComponent<Renderer>();
+            
+        if (Inventory.Instance.HoldingItem == Inventory.Instance.RadishSeed)
+        {
+            TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.PlantRadish);
+        } 
+        else if (Inventory.Instance.HoldingItem == Inventory.Instance.PumpkinSeed)
+        {
+            TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.PlantPumpkin);
+        }
+
+        if (currentCropData != SeasonManager.Instance.GetSeasonalCrop())
+        {
+            HUD.Instance.ShowNotification("This crop will not grow in this season.");
+        }
+    }
+
     private void HarvestCrop()
     {
+        if (TutorialManager.Instance.IsTutorialActive)
+        {
+            TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.HarvestCrop);
+        }
         RemoveCurrentCrop();
         GameManager.Instance.GainScore();
     }
@@ -370,25 +423,16 @@ public class Plot : MonoBehaviour
     {
         if (Inventory.Instance.HoldingItem == Inventory.Instance.WateringCan && !isWatered)
         {
-            isWatered = true;
-            maximumWateredTime = SeasonManager.Instance.GetDryOutTime();
-            SetColor();
+            WaterCrop();
         } 
         else if (Inventory.Instance.HoldingItem == Inventory.Instance.Shovel && IsOccupied)
         {
+            TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.DestroyCrop);
             RemoveCurrentCrop();
         }
         else if (Inventory.Instance.HoldingItem != Inventory.Instance.WateringCan && Inventory.Instance.HoldingItem != Inventory.Instance.Shovel && Inventory.Instance.HoldingItem != null && !IsOccupied)
         {
-            GameObject cropClone = Instantiate(Inventory.Instance.HoldingItem.prefab, transform);
-            currentCrop = cropClone;
-            currentCropData = Inventory.Instance.HoldingItem;
-            currentCropRenderer = cropClone.GetComponent<Renderer>();
-
-            if (currentCropData != SeasonManager.Instance.GetSeasonalCrop())
-            {
-                HUD.Instance.ShowNotification("This crop will not grow in this season.");
-            }
+            PlantCrop();
         }
         else if (IsOccupied && IsGrown && !IsFullyRot)
         {

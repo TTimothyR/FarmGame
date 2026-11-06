@@ -25,7 +25,7 @@ public class GoodInsect : Insect
 
             if (elapsedPollinateTime >= pollinateDuration)
             {
-                base.Kill();
+                base.Kill(false);
             }
         }
     }
@@ -35,12 +35,15 @@ public class GoodInsect : Insect
         return Mathf.Clamp01(elapsedPollinateTime / pollinateDuration);
     }
 
-    public override void Kill()
+    public override void Kill(bool affectScore)
     {
-        base.Kill();
-        
-        HUD.Instance.ShowNotification($"-1 For killing a good insect!", Color.darkRed);
-        GameManager.Instance.GoodInsectKillPunishment();
+        base.Kill(affectScore);
+
+        if (affectScore)
+        {
+            HUD.Instance.ShowNotification($"-1 For killing a good insect!", Color.darkRed);
+            GameManager.Instance.GoodInsectKillPunishment();
+        }
     }
 
     public float GetBoost()

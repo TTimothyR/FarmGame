@@ -15,6 +15,7 @@ public class ScreenManager : MonoBehaviour
     [SerializeField] private VerticalLayoutGroup leaderboard;
     [SerializeField] private TextMeshProUGUI leaderboardEntryTemplate;
     [SerializeField] private TMP_InputField playerNameInput;
+    [SerializeField] private Toggle tutorialToggle;
     [SerializeField] private float playErrorDisplayTime;
     
     [Header("Game Over Screen")]
@@ -106,6 +107,14 @@ public class ScreenManager : MonoBehaviour
                 elapsedDisplayTime = 0f;
             }
             return;
+        }
+
+        if (tutorialToggle != null)
+        {
+            if (tutorialToggle.isOn)
+            {
+                TutorialManager.Instance.StartTutorial();
+            }
         }
 
         LeaderboardManager.CurrentPlayerName = playerNameInput.text.Trim();

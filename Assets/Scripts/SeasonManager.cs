@@ -64,7 +64,7 @@ public class SeasonManager : MonoBehaviour
 
     private void Update()
     {
-        if (!GameManager.Instance.GameStarted)
+        if (!GameManager.Instance.GameStarted || TutorialManager.Instance.IsTutorialActive)
         {
             return;
         }

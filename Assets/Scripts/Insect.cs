@@ -5,16 +5,23 @@ public abstract class Insect : MonoBehaviour
     [SerializeField] protected float moveSpeed = 3f;
 
     protected Plot targetPlot;
+    protected bool isTutorialInsect;
     public bool HasArrived { get; private set; } = false;
 
-    public void Initialize(Plot plot)
+    public void Initialize(Plot plot, bool tutorialInsect)
     {
         targetPlot = plot;
+        isTutorialInsect = tutorialInsect;
     }
 
     protected virtual void Update()
     {
         if (targetPlot == null || HasArrived)
+        {
+            return;
+        }
+
+        if (!GameManager.Instance.GameStarted)
         {
             return;
         }
@@ -33,7 +40,7 @@ public abstract class Insect : MonoBehaviour
     protected abstract void OnArrived();
     public abstract float GetProgress();
 
-    public virtual void Kill()
+    public virtual void Kill(bool affectScore)
     {
         Destroy(gameObject);
     }

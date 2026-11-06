@@ -163,6 +163,11 @@ public class HUD : MonoBehaviour
 
     private static readonly Color NotifBaseColor = new Color(0.85f, 0.26f, 0.25f);
 
+    public void FollowTutorialNotification()
+    {
+        ShowNotification("Follow the tutorial please!");
+    }
+
     public void ShowNotification(string message)
     {
         ShowNotification(message, NotifBaseColor);

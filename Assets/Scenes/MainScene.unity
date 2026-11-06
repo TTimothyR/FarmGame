@@ -1537,6 +1537,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2145472748}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1887173719
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1887173720}
+  - component: {fileID: 1887173721}
+  m_Layer: 0
+  m_Name: TutorialManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1887173720
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887173719}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2023231443}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1887173721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887173719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 955c85bcffba99344b19e02b381e57fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialManager
+  tutorialInstructionText: {fileID: 7508191278084064538}
 --- !u!1 &1969741518
 GameObject:
   m_ObjectHideFlags: 0
@@ -1602,6 +1647,7 @@ Transform:
   - {fileID: 837332636}
   - {fileID: 2073293066}
   - {fileID: 2082675092}
+  - {fileID: 1887173720}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2056796538
@@ -1669,6 +1715,7 @@ MonoBehaviour:
   leaderboard: {fileID: 1268514374}
   leaderboardEntryTemplate: {fileID: 4971552617196680133, guid: d55f435faee869b4a87cd3e2c8e31760, type: 3}
   playerNameInput: {fileID: 1569910597}
+  tutorialToggle: {fileID: 2144278138968094246}
   playErrorDisplayTime: 3
   gameOverScreenCanvas: {fileID: 383340320}
   restartButton: {fileID: 187973209}
@@ -1740,8 +1787,8 @@ MonoBehaviour:
   goodInsectTemplate: {fileID: 91019471248907617, guid: b17b8eb27be037845a570236d97dd637, type: 3}
   badInsectTemplate: {fileID: 1003984049720116289, guid: 505fe616a45df224aaf4382432417c4d, type: 3}
   spawnPoints: {fileID: 2145472747}
-  spawnInterval: 0.5
-  badInsectSpawnRate: 0.5
+  spawnInterval: 4
+  badInsectSpawnRate: 0.6
   player: {fileID: 464840782}
   maximumKillDistance: 4
 --- !u!1 &2145472747
@@ -1940,6 +1987,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c284075622fc77d44948cf2c625d1065, type: 3}
+--- !u!114 &2144278138968094246 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1446566975700564694, guid: c284075622fc77d44948cf2c625d1065, type: 3}
+  m_PrefabInstance: {fileID: 2144278138968094245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Toggle
 --- !u!1001 &2211390261872464087
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2308,6 +2366,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d91abaf881d71a4496dabb78c2653ce, type: 3}
+--- !u!114 &7508191278084064538 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8489032141503267375, guid: 1d91abaf881d71a4496dabb78c2653ce, type: 3}
+  m_PrefabInstance: {fileID: 7508191278084064537}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &7942815882644059035
 PrefabInstance:
   m_ObjectHideFlags: 0

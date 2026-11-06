@@ -9,6 +9,8 @@ public class InsectManager : MonoBehaviour
 {
     public static InsectManager Instance { get; private set; }
     
+    [SerializeField] private Transform plotManager;
+    [SerializeField] private int tutorialPlotIndex = 11;
     [SerializeField] private GameObject goodInsectTemplate;
     [SerializeField] private GameObject badInsectTemplate;
     [SerializeField] private GameObject spawnPoints;
@@ -41,7 +43,16 @@ public class InsectManager : MonoBehaviour
     
     private void Update()
     {
-        if (!GameManager.Instance.GameStarted) return;
+        if (!GameManager.Instance.GameStarted)
+        {
+            return;
+        }
+
+        if (TutorialManager.Instance.IsTutorialActive)
+        {
+            HandleClick();
+            return;
+        }
 
         timer += Time.deltaTime;
         if (timer >= spawnInterval)
@@ -54,7 +65,6 @@ public class InsectManager : MonoBehaviour
         {
             return;
         }
-        
         HandleClick();
     }
     
@@ -86,12 +96,33 @@ public class InsectManager : MonoBehaviour
                         return;
                     }
                     
-                    hitInsect.Kill();
+                    TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.KillInsect);
+                    hitInsect.Kill(true);
                 }
             }
         }
     }
 
+    public void SpawnTutorialInsect()
+    {
+        int index = Random.Range(0, spawnPoints.transform.childCount);
+        Transform spawnPoint = spawnPoints.transform.GetChild(index);
+        
+        Plot targetPlot = plotManager.GetChild(tutorialPlotIndex).GetComponent<Plot>();
+
+        GameObject insectToSpawn = badInsectTemplate;
+        GameObject clone = Instantiate(insectToSpawn, transform);
+        clone.transform.position = spawnPoint.position;
+        clone.transform.rotation = Quaternion.identity;
+        
+        Insect insect = clone.GetComponent<Insect>();
+
+        if (insect != null)
+        {
+            targetPlot.AddInsect(insect);
+            insect.Initialize(targetPlot, true);
+        }
+    }
 
     private void SpawnRandomInsect()
     {
@@ -115,7 +146,7 @@ public class InsectManager : MonoBehaviour
         if (insect != null)
         {
             targetPlot.AddInsect(insect);
-            insect.Initialize(targetPlot);
+            insect.Initialize(targetPlot, false);
         }
     }
 

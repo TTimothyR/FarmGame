@@ -52,6 +52,12 @@ public class MovementBehaviour : MonoBehaviour
 
         Vector3 movement = _desiredMovementDirection.normalized;
         movement *= _movementSpeed;
+
+        if (movement.sqrMagnitude >= 1f && TutorialManager.Instance.IsTutorialActive)
+        {
+            TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.MoveAround);
+        }
+        
         movement.y = _rigidbody.linearVelocity.y;
         _rigidbody.linearVelocity = movement;
     }

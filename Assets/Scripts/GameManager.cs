@@ -53,6 +53,15 @@ public class GameManager : MonoBehaviour
         HUD.Instance.UpdateSeasonalQuota();
     }
 
+    public void ResetTutorialValues()
+    {
+        QuotaProgress = 0;
+        CurrentScore = 0;
+        
+        HUD.Instance.UpdateScore();
+        HUD.Instance.UpdateSeasonalQuota();
+    }
+
     public void LoseLife()
     {
         --CurrentLives;
@@ -89,7 +98,7 @@ public class GameManager : MonoBehaviour
         HUD.Instance.UpdateScore();
         HUD.Instance.UpdateSeasonalQuota();
         
-        if (CurrentScore > CurrentHighScore)
+        if (CurrentScore > CurrentHighScore && !TutorialManager.Instance.IsTutorialActive)
         {
             CurrentHighScore = CurrentScore;
             HUD.Instance.UpdateHighScore();
@@ -101,7 +110,7 @@ public class GameManager : MonoBehaviour
         ++CurrentScore;
         HUD.Instance.UpdateScore();
         
-        if (CurrentScore > CurrentHighScore)
+        if (CurrentScore > CurrentHighScore && !TutorialManager.Instance.IsTutorialActive)
         {
             CurrentHighScore = CurrentScore;
             HUD.Instance.UpdateHighScore();
