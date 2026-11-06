@@ -1786,7 +1786,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c830a0bc85c81748be0020f30dc61b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InsectManager
-  plotManager: {fileID: 837332636}
+  plotManager: {fileID: 837332637}
   tutorialPlotIndex: 11
   goodInsectTemplate: {fileID: 91019471248907617, guid: b17b8eb27be037845a570236d97dd637, type: 3}
   badInsectTemplate: {fileID: 1003984049720116289, guid: 505fe616a45df224aaf4382432417c4d, type: 3}
@@ -1887,6 +1887,10 @@ PrefabInstance:
     - target: {fileID: 3210594327272904650, guid: 20cb6435849a553489dbcc302657e03b, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4183614258424389507, guid: 20cb6435849a553489dbcc302657e03b, type: 3}
+      propertyPath: movementSpeed
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8064685587634111178, guid: 20cb6435849a553489dbcc302657e03b, type: 3}
