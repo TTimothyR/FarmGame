@@ -1,8 +1,11 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-
-
+/// <summary>
+/// Manages all the functionality of a plot.
+/// Is a plot watered? Is there an insect on the plot? Is there a crop on the plot?
+/// Visual cues of the plot are also managed here.
+/// </summary>
 public class Plot : MonoBehaviour
 {
     [SerializeField] private Sprite waterDropIcon;
@@ -66,9 +69,14 @@ public class Plot : MonoBehaviour
     private Vector3 _initialPulseScale;
     private float _pulseElapsedTime;
 
-    private bool IsGrown => Math.Floor(_currentCropElapsedTime / growTime) > 0;
-    private bool IsRotting => Math.Floor(_currentCropElapsedTime / (growTime + timeUntilRotStart)) > 0;
-    private bool IsFullyRot => Math.Floor(_currentCropElapsedTime / (growTime + timeUntilRotStart + rotTime)) > 0;
+    /// <summary>
+    /// A crop is fully grown when its total elapsed time is greater than the time it needs to grow.
+    /// A crop is rotting when it has fully grown, and it has exceeded the time before it starts rotting.
+    /// A crop is fully rotten when its elapsed time is greater than the time needed for the 2 previous stages, and the time needed to fully rot.
+    /// </summary>
+    private bool IsGrown => _currentCropElapsedTime >= growTime;
+    private bool IsRotting => _currentCropElapsedTime >= (growTime + timeUntilRotStart);
+    private bool IsFullyRot => _currentCropElapsedTime >= (growTime + timeUntilRotStart + rotTime);
     
     private void Awake()
     {
@@ -103,6 +111,7 @@ public class Plot : MonoBehaviour
             return;
         }
 
+        // Creates a copy of the plot renderer used for the white pulse effect when a crop is fully grown
         _pulseVisual = Instantiate(_plotRenderer.gameObject, _plotRenderer.transform.parent);
         _pulseVisual.name = "CropGrownPulse";
 
@@ -132,19 +141,25 @@ public class Plot : MonoBehaviour
         HandleCropNeeds(isSeasonRight);
         HandleInsectIndicator();
         
+        // A crop only grows in the matching season.
         if (isSeasonRight)
         {
+            // Additionally, in order to grow, the plot must be occupied by a crop, it must not already be grown and the plot must be watered.
             if (IsOccupied && !IsGrown && _currentCrop != null && _isWatered)
             {
                 GrowCrop();
             }
         }
         
+        // If a crop is not fully grown, the elapsed time is updated in the GrowCrop method.
+        // If the crop is rotting, the elapsed time is updated in the RotCrop method.
         if (IsOccupied && IsGrown && !IsRotting)
         {
             _currentCropElapsedTime += Time.deltaTime;
         }
         
+        // A crop will not rot when the required tutorial step is to harvest the crop.
+        // Letting the crop rot and disappear would soft lock the player.
         if (IsOccupied && IsGrown && IsRotting && _cropMaterial != null && _currentCrop != null && !IsOnHarvestStep)
         {
             RotCrop();
@@ -158,6 +173,7 @@ public class Plot : MonoBehaviour
         HandleGrownPulse();
     }
 
+    // Used to create a nice effect for the Grown Crop Pulse Indicator.
     private float EaseOutQuint(float progress)
     {
         return 1f - Mathf.Pow(1 - progress, 5f);
@@ -172,6 +188,7 @@ public class Plot : MonoBehaviour
         }
         if (shouldPulse)
         {
+            // If the animation wasn't playing already, this resets the elapsed time.
             if (!_pulseVisual.activeSelf)
             {
                 _pulseVisual.SetActive(true);
@@ -190,6 +207,7 @@ public class Plot : MonoBehaviour
                 _initialPulseScale.z * currentMultiplier
             );
 
+            // Fades the visual from opaque to fully transparent.
             if (_pulseRenderer != null)
             {
                 Color color = _pulseRenderer.material.color;
@@ -263,6 +281,8 @@ public class Plot : MonoBehaviour
             plotNeeds.enabled = true;
             _plotNeedsImg.sprite = iconToShow;
 
+            
+            // Makes the icon grow bigger and smaller over and over to emphasize.
             float wave = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f;
             float scale = Mathf.Lerp(smallScale, bigScale, wave);
             plotNeeds.transform.localScale = Vector3.one * scale;
@@ -273,6 +293,7 @@ public class Plot : MonoBehaviour
         }
     }
 
+    // Used in the plot dry out color to make the color change more noticeable 
     private float EaseInSine(float progress)
     {
         return 1 - Mathf.Cos((progress * Mathf.PI) / 2f);
@@ -300,11 +321,13 @@ public class Plot : MonoBehaviour
     {
         float boostMultiplier = 1;
 
+        // If there's a good insect on the crop, it grows faster.
         if (_currentInsect is GoodInsect goodInsect)
         {
             boostMultiplier = goodInsect.GetBoost();
         }
         
+        // Linearly increase the crops scale based on the growth.
         _currentCropElapsedTime += Time.deltaTime * boostMultiplier;
         float t = _currentCropElapsedTime / growTime;
         float scale = Mathf.Lerp(startScale, endScale, t);
@@ -315,6 +338,7 @@ public class Plot : MonoBehaviour
     {
         float boostMultiplier = 1;
 
+        // If there's a good insect on the crop, it rots slower.
         if (_currentInsect is GoodInsect goodInsect)
         {
             boostMultiplier = goodInsect.GetBoost();
@@ -374,6 +398,7 @@ public class Plot : MonoBehaviour
 
     private void PlantCrop()
     {
+        // During the tutorial, the player can only plant the asked seed, and cannot plant anything when this isn't required.
         if (TutorialManager.Instance.IsTutorialActive)
         {
             TutorialManager.TutorialSteps step = TutorialManager.Instance.CurrentStep;
@@ -435,6 +460,7 @@ public class Plot : MonoBehaviour
 
     private void HarvestCrop()
     {
+        // During the tutorial, you cannot harvest the crop that should rot to avoid soft lock.
         if (TutorialManager.Instance.CurrentStep == TutorialManager.TutorialSteps.WaitForCropRot)
         {
             HUD.Instance.FollowTutorialNotification();
@@ -479,6 +505,7 @@ public class Plot : MonoBehaviour
         {
             if (TutorialManager.Instance.IsTutorialActive)
             {
+                // During the tutorial, you can only destroy a crop with the shovel during its step to avoid soft lock.
                 if (TutorialManager.Instance.CurrentStep != TutorialManager.TutorialSteps.DestroyCrop)
                 {
                     HUD.Instance.FollowTutorialNotification();

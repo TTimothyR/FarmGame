@@ -4,7 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
-
+/// <summary>
+/// Creates the hotbar slots and calls the interact callback when interacted with it.
+/// Displays the players current lives, score and high score.
+/// Displays the current season icon, with the remaining time in the season, and the seasonal quota.
+/// </summary>
 public class HUD : MonoBehaviour
 {
     [Header("Quota Warning Animation")] 
@@ -83,6 +87,7 @@ public class HUD : MonoBehaviour
         (float, float) seasonTimesData = SeasonManager.Instance.GetElapsedSeasonTime();
         if (!GameManager.Instance.IsQuotaMet() && (seasonTimesData.Item2 - seasonTimesData.Item1) <= quotaNotMetTimeTrigger)
         {
+            // Scales the quota text bigger and smaller while the quota is not met, as well as playing the low time warning
             AudioManager.Instance.PlayLoop(AudioManager.SoundType.LowTimeWarning);
             float wave = (Mathf.Sin(Time.time * speed) + 1f) * 0.5f;
             float scale = Mathf.Lerp(SmallScale, bigScale, wave);
@@ -259,6 +264,7 @@ public class HUD : MonoBehaviour
             return;
         }
 
+        // Interpolates the seasonal quota text based on how much the quota is completed.
         float progress = Mathf.Clamp01((float)GameManager.Instance.QuotaProgress / GameManager.Instance.CurrentQuota);
         quotaLabel.color = Color.Lerp(_quotaNotMetColor, _quotaMetColor, progress);
         

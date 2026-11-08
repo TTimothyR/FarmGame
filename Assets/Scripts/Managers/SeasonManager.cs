@@ -1,7 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
-
+/// <summary>
+/// Manages the season data based on a season type to avoid typos and other variables.
+/// It tells the game when the season changes and when the seasonal quota should be checked or refreshed.
+/// </summary>
 public class SeasonManager : MonoBehaviour
 {
     public enum Seasons

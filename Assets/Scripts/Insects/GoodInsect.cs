@@ -1,5 +1,9 @@
 using UnityEngine;
-
+/// <summary>
+/// Good insect helps the player with crop growth.
+/// When the insect arrives it boosts the crop growth for a set duration.
+/// When the insect is killed on purpose, the player loses a point.
+/// </summary>
 public class GoodInsect : Insect
 {
     [SerializeField] private float pollinateDuration = 3f;
@@ -22,6 +26,7 @@ public class GoodInsect : Insect
         {
             _elapsedPollinateTime += Time.deltaTime;
 
+            // When the insect exceeds its help time, it kills itself, the player does not lose points for this.
             if (_elapsedPollinateTime >= pollinateDuration)
             {
                 base.Kill(false);

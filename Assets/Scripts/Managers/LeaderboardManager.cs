@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-
+/// <summary>
+/// Manages loading and saving leaderboard data
+/// Fetches previous high score if the same name is entered.
+/// </summary>
 public static class LeaderboardManager
 {
     public static string CurrentPlayerName;

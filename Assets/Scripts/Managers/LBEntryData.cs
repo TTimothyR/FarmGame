@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
-
+/// <summary>
+/// The data that is stored in the JSON leaderboard file.
+/// </summary>
 [Serializable]
 public class Entry
 {

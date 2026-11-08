@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+/// <summary>
+/// Manages the game state, player score, high score, lives, and the seasonal quota.
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -53,6 +55,7 @@ public class GameManager : MonoBehaviour
         HUD.Instance.UpdateSeasonalQuota();
     }
 
+    // Some values were changed during the tutorial, reset them when the game actually starts.
     public void ResetTutorialValues()
     {
         QuotaProgress = 0;

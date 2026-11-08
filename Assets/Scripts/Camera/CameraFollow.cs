@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// Placed inside the main camera object.
+/// Follows the player around the plot with a smooth linear interpolation and locked to a maximum offset so the player is not always centered.
+/// </summary>
 public class CameraFollow : MonoBehaviour
 {
     [SerializeField] private Transform player;
@@ -24,9 +28,11 @@ public class CameraFollow : MonoBehaviour
             return;
         }
 
+        // There is no jump feature in the game, this makes sure the player only moves in the XZ plane.
         Vector3 playerDisplacement = player.position;
         playerDisplacement.y = 0;
 
+        // Calculates how much the camera should move given how much the player moved from the start position
         Vector3 offset = Vector3.ClampMagnitude(playerDisplacement * nudgeMultiplier, maxDisplacement);
         Vector3 targetPosition = _basePosition + offset;
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);

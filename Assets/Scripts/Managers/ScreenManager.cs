@@ -3,7 +3,9 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using System.Collections.Generic;
-
+/// <summary>
+/// Manages which screen is shown and what happens when the buttons on the screens are pressed.
+/// </summary>
 public class ScreenManager : MonoBehaviour
 {
     public static ScreenManager Instance { get; private set; }
@@ -124,6 +126,7 @@ public class ScreenManager : MonoBehaviour
             }
         }
 
+        // Cuts out white spaces at the end of the input string.
         LeaderboardManager.CurrentPlayerName = playerNameInput.text.Trim();
         GameManager.Instance.StartGame();
         if (startScreenCanvas != null)

@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
-
+/// <summary>
+/// Manages spawning an insect, by selecting a random spawn point and the furthest occupied plot from that spawn point.
+/// Handles killing the insect with the right tool
+/// </summary>
 public class InsectManager : MonoBehaviour
 {
     public static InsectManager Instance { get; private set; }
@@ -102,6 +105,7 @@ public class InsectManager : MonoBehaviour
         }
     }
 
+    // Only used once to spawn a dummy insect during the tutorial to teach the player.
     public void SpawnTutorialInsect()
     {
         int index = Random.Range(0, spawnPoints.transform.childCount);
@@ -129,6 +133,7 @@ public class InsectManager : MonoBehaviour
         }
     }
 
+    // Spawns a random insect, based on a spawn rate and a random spawn point.
     private void SpawnRandomInsect()
     {
         int index = Random.Range(0, spawnPoints.transform.childCount);
@@ -155,6 +160,7 @@ public class InsectManager : MonoBehaviour
         }
     }
 
+    // Calculates the furthest plot with a crop from the selected spawn point.
     private Plot GetFurthestOccupiedPlot(Vector3 spawnPosition)
     {
         if (plotManager == null)

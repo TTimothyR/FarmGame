@@ -1,5 +1,9 @@
 using UnityEngine;
-
+/// <summary>
+/// Abstract base class that all insect types derive from
+/// It handles the insects movement and basic kill behavior that all insects use.
+/// The insect does not despawn if it is a tutorial insect.
+/// </summary>
 public abstract class Insect : MonoBehaviour
 {
     [SerializeField] protected float moveSpeed = 3f;
@@ -29,6 +33,7 @@ public abstract class Insect : MonoBehaviour
             return;
         }
 
+        // Makes the insect move towards the target plot and look at the plot instead of a fixed rotation.
         Vector3 targetPosition = TargetPlot.transform.position;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
         transform.LookAt(targetPosition);

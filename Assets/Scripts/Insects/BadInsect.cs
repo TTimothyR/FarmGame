@@ -1,5 +1,9 @@
 using UnityEngine;
-
+/// <summary>
+/// Bad insect destroys the players crop.
+/// When the insect arrives, it eats from the crop, and destroys it after a set duration.
+/// When the insect is killed on purpose, the player gains a point.
+/// </summary>
 public class BadInsect : Insect
 {
     [SerializeField] private float eatDuration = 4f;
@@ -21,6 +25,8 @@ public class BadInsect : Insect
         {
             _elapsedEatingTime += Time.deltaTime;
 
+            
+            // When the insect exceeds its eat duration, it destroys itself and the crop. The player does not gain a point for the insect dying.
             if (_elapsedEatingTime >= eatDuration)
             {
                 DestroyCrop();

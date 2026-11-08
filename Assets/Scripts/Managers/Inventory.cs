@@ -1,5 +1,8 @@
 using UnityEngine;
-
+/// <summary>
+/// Helper singleton to manage the item the player currently has equipped
+/// Other initialized items are used by other scripts to see if the holding item is the right one for its behaviour.
+/// </summary>
 public class Inventory : MonoBehaviour
 {
     [SerializeField] private ItemData radishSeed;

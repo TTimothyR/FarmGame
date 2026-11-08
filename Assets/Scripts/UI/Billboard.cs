@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// Attached to a world space canvas to make it always faces the camera.
+/// </summary>
 public class Billboard : MonoBehaviour
 {
     private Transform _camera;

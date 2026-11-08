@@ -1,6 +1,10 @@
 using TMPro;
 using UnityEngine;
-
+/// <summary>
+/// NOTE: At the end of this project I realized it would have been better to use Actions for this system and have the other scripts call it when a step was done, but due to scope and time I did not change the system.
+/// Handles the tutorial, has a tutorialSteps type to avoid typos from other scripts.
+/// Advances to the next step if the provided current step is the same as the actual current step.
+/// </summary>
 public class TutorialManager : MonoBehaviour
 {
     public static TutorialManager Instance { get; private set; }

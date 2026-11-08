@@ -2,7 +2,9 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+/// <summary>
+/// The hotbar slot object that sets the right icon, keybind and interact callback.
+/// </summary>
 public class HotbarSlot : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
@@ -18,7 +20,6 @@ public class HotbarSlot : MonoBehaviour
     {
         if (button == null)
         {
-            Debug.LogWarning("Fields not initialized.");
             return;
         }
         button.onClick.AddListener(() => _onSlotClicked?.Invoke(_assignedItem, this));
@@ -28,7 +29,6 @@ public class HotbarSlot : MonoBehaviour
     {
         if (keybindText == null || iconImage == null || seasonImage == null)
         {
-            Debug.LogWarning("Fields not initialized.");
             return;
         }
         _assignedItem = item;

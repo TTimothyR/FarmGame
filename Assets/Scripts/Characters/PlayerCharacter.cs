@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+/// <summary>
+/// Handles player movement input and sends the values to MovementBehaviour.cs to handle the actual movement.
+/// Only reads movement input while the player is not in a Menu.
+/// </summary>
 public class PlayerCharacter : BasicCharacter
 {
     [SerializeField] private InputActionAsset inputAsset;

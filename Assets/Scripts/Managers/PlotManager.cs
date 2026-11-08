@@ -2,7 +2,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
-
+/// <summary>
+/// Initializes all the plots and handles interaction with them
+/// Handles color changing based on mouse hover or click.
+/// Also performs a range check if the player is close enough to a plot to interact with it.
+/// </summary>
 public class PlotManager : MonoBehaviour
 {
     [SerializeField] private int plotRows = 4;
@@ -126,6 +130,7 @@ public class PlotManager : MonoBehaviour
             int row = index / plotColumns;
             int column = index % plotColumns;
 
+            // Places plot on the grid
             clone.transform.position = new Vector3(startPosition.x + (row * spacing.x), startPosition.y, startPosition.z +
                 (column * spacing.z));
             

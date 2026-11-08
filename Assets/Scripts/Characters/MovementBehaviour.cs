@@ -1,5 +1,8 @@
 using UnityEngine;
-
+/// <summary>
+/// Handles the player movement based on a public variable set in PlayerCharacter.cs
+/// If the player is in a Menu the player movement gets set to 0, 0, 0.
+/// </summary>
 public class MovementBehaviour : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 15.0f;
@@ -37,6 +40,7 @@ public class MovementBehaviour : MonoBehaviour
             return;
         }
 
+        // The movement direction is normalized for proper scaling with movement speed.
         Vector3 movement = _desiredMovementDirection.normalized;
         movement *= movementSpeed;
 
@@ -45,7 +49,6 @@ public class MovementBehaviour : MonoBehaviour
             TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.MoveAround);
         }
         
-        movement.y = _rigidbody.linearVelocity.y;
         _rigidbody.linearVelocity = movement;
     }
 }
