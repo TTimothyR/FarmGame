@@ -233,7 +233,7 @@ public class HUD : MonoBehaviour
 
     public void UpdateSeasonIcon(Sprite targetIcon)
     {
-        if (currentSeasonIcon != null)
+        if (currentSeasonIcon == null)
         {
             return;
         }

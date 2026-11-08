@@ -1117,7 +1117,7 @@ MonoBehaviour:
     requiredCropsHarvested:
       minimum: 6
       maximum: 8
-    completionBonus: 0
+    completionBonus: 5
   - type: 1
     dryoutTime: 5
     color: {r: 0.836478, g: 0.7272146, b: 0.27619547, a: 0}
@@ -1125,7 +1125,7 @@ MonoBehaviour:
     requiredCropsHarvested:
       minimum: 10
       maximum: 12
-    completionBonus: 0
+    completionBonus: 10
   - type: 2
     dryoutTime: 12
     color: {r: 0.8301887, g: 0.44961765, b: 0.15402867, a: 0}
@@ -1133,7 +1133,7 @@ MonoBehaviour:
     requiredCropsHarvested:
       minimum: 14
       maximum: 16
-    completionBonus: 0
+    completionBonus: 15
   - type: 3
     dryoutTime: 15
     color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 0}
@@ -1142,7 +1142,7 @@ MonoBehaviour:
       minimum: 18
       maximum: 20
     completionBonus: 0
-  seasonDuration: 50
+  seasonDuration: 55
   ground: {fileID: 1051480481}
 --- !u!1 &743514246
 GameObject:
