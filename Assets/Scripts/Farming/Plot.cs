@@ -40,6 +40,7 @@ public class Plot : MonoBehaviour
     
     public bool IsOccupied => _currentCrop != null;
     public bool HasInsect => _currentInsect != null;
+    private bool IsOnHarvestStep => TutorialManager.Instance.CurrentStep == TutorialManager.TutorialSteps.HarvestCrop;
     private bool _isWatered;
     private bool _isHovering;
     
@@ -144,12 +145,12 @@ public class Plot : MonoBehaviour
             _currentCropElapsedTime += Time.deltaTime;
         }
         
-        if (IsOccupied && IsGrown && IsRotting && _cropMaterial != null && _currentCrop != null)
+        if (IsOccupied && IsGrown && IsRotting && _cropMaterial != null && _currentCrop != null && !IsOnHarvestStep)
         {
             RotCrop();
         }
 
-        if (IsOccupied && IsFullyRot && _currentCrop != null)
+        if (IsOccupied && IsFullyRot && _currentCrop != null && !IsOnHarvestStep)
         {
             DestroyCrop();
         }
@@ -164,7 +165,7 @@ public class Plot : MonoBehaviour
 
     private void HandleGrownPulse()
     {
-        bool shouldPulse = IsOccupied && IsGrown && !IsRotting;
+        bool shouldPulse = IsOccupied && IsGrown && (!IsRotting || !IsOnHarvestStep);
         if (_pulseVisual == null)
         {
             return;
@@ -252,7 +253,7 @@ public class Plot : MonoBehaviour
         {
             iconToShow = waterDropIcon;
         } 
-        else if (IsRotting)
+        else if (IsRotting && !IsOnHarvestStep)
         {
             iconToShow = exclamationMarkIcon;
         }
@@ -354,6 +355,10 @@ public class Plot : MonoBehaviour
 
     public void DestroyCrop()
     {
+        if (IsFullyRot)
+        {
+            TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.WaitForCropRot);
+        }
         RemoveCurrentCrop();
         GameManager.Instance.LoseLife();
     }
@@ -374,7 +379,7 @@ public class Plot : MonoBehaviour
             TutorialManager.TutorialSteps step = TutorialManager.Instance.CurrentStep;
 
             if (step != TutorialManager.TutorialSteps.PlantRadish &&
-                step != TutorialManager.TutorialSteps.PlantPumpkin)
+                step != TutorialManager.TutorialSteps.PlantPumpkin && step != TutorialManager.TutorialSteps.WaterRadish2)
             {
                 HUD.Instance.FollowTutorialNotification();
                 return;
@@ -382,6 +387,14 @@ public class Plot : MonoBehaviour
 
             if (step == TutorialManager.TutorialSteps.PlantPumpkin &&
                 Inventory.Instance.HoldingItem != Inventory.Instance.PumpkinSeed)
+            {
+                HUD.Instance.FollowTutorialNotification();
+                return;
+            }
+            
+            if (step is TutorialManager.TutorialSteps.PlantRadish
+                    or TutorialManager.TutorialSteps.WaterRadish2
+                && Inventory.Instance.HoldingItem != Inventory.Instance.RadishSeed)
             {
                 HUD.Instance.FollowTutorialNotification();
                 return;
@@ -407,6 +420,7 @@ public class Plot : MonoBehaviour
         if (Inventory.Instance.HoldingItem == Inventory.Instance.RadishSeed)
         {
             TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.PlantRadish);
+            TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.WaterRadish2);
         } 
         else if (Inventory.Instance.HoldingItem == Inventory.Instance.PumpkinSeed)
         {
@@ -421,6 +435,11 @@ public class Plot : MonoBehaviour
 
     private void HarvestCrop()
     {
+        if (TutorialManager.Instance.CurrentStep == TutorialManager.TutorialSteps.WaitForCropRot)
+        {
+            HUD.Instance.FollowTutorialNotification();
+            return;
+        }
         if (TutorialManager.Instance.IsTutorialActive)
         {
             TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.HarvestCrop);
@@ -458,6 +477,14 @@ public class Plot : MonoBehaviour
         } 
         else if (Inventory.Instance.HoldingItem == Inventory.Instance.Shovel && IsOccupied)
         {
+            if (TutorialManager.Instance.IsTutorialActive)
+            {
+                if (TutorialManager.Instance.CurrentStep != TutorialManager.TutorialSteps.DestroyCrop)
+                {
+                    HUD.Instance.FollowTutorialNotification();
+                    return;
+                }
+            }
             TutorialManager.Instance.StepFinished(TutorialManager.TutorialSteps.DestroyCrop);
             RemoveCurrentCrop();
         }

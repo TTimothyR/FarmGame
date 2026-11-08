@@ -11,6 +11,8 @@ public class TutorialManager : MonoBehaviour
         PlantRadish,
         WaterCrop,
         HarvestCrop,
+        WaterRadish2,
+        WaitForCropRot,
         KillInsect,
         PlantPumpkin,
         DestroyCrop,
@@ -26,8 +28,10 @@ public class TutorialManager : MonoBehaviour
     {
         "Walk around using WASD.",
         "Equip your Radish Seed from the hotbar and click a plot to plant it.",
-        "Equip your Watering Can and click the plot to water it.",
-        "Wait until the crop is fully grown, and click it to harvest.",
+        "Equip your Watering Can and click the plot to water it. \n Plots dry out faster or slower, depending on the season!",
+        "Wait until the crop is fully grown, and click it to harvest. It gives you one point towards the quota. \n If you miss the quota, it's game over.",
+        "Plant another Radish and water it.",
+        "Wait for the crop to fully rot away. You lose 1 life. Don't lose all your lives!",
         "An insect approaches. Equip your Shovel and click the insect to kill it! You shouldn't kill them all though...",
         "Equip your Pumpkin Seed and plant it.",
         "Pumpkin doesn't grow in this season. Equip your Shovel and click the plot to get rid of it!"

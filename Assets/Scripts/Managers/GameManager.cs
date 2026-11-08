@@ -57,7 +57,9 @@ public class GameManager : MonoBehaviour
     {
         QuotaProgress = 0;
         CurrentScore = 0;
+        CurrentLives = maxLives;
         
+        HUD.Instance.UpdateLives();
         HUD.Instance.UpdateScore();
         HUD.Instance.UpdateSeasonalQuota();
     }
